@@ -6,10 +6,10 @@
 #include <stdio.h>
 
 int main() {
-    printf("Hello, World, mais avec deux auteurs ?\n");
+    printf("Hello, World, mais avec trois auteurs ?\n");
     return 0;
 }
 
-//Test Modification Github / Co-auteur : Léon et Annabelle
+//Test Modification Github / Co-auteur : Léon et Annabelle et Alara ?
 
 
