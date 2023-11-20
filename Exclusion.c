@@ -1,0 +1,48 @@
+
+
+// STRUCTURE DE DONNEES
+#include <stdio.h>
+#include <stdlib.h>
+
+#define OPERATION_MAX 100
+#define NB_STATTIONS_MAX 10
+
+// Structure pour représenter les contraintes d'exclusion
+typedef struct
+{
+    int op1;
+    int op2;
+} Exclusion;
+
+// Structure pour représenter la répartition des opérations sur les stations
+typedef struct
+{
+    int station[OPERATION_MAX];
+} Repartition;
+
+
+
+
+// LECTURE DES FICHIERS DE CONTRAINTES
+
+void LireFichierContraintes(char* nomFichier, Exclusion* exclusion, int* nbExclusions)
+{
+    FILE* fichier = fopen(nomFichier, "r");
+    if (fichier == NULL)
+    {
+        printf("Erreur lors de l'ouverture du fichier %s\n", nomFichier);
+        exit(EXIT_FAILURE);
+    }
+
+    fscanf(fichier, "%d", nbExclusions);
+
+    for (int i = 0; i < *nbExclusions; i++) {
+        fscanf(fichier, "%d %d", &exclusion[i].op1, &exclusion[i].op2);
+    }
+
+    fclose(fichier);
+}
+
+
+
+
