@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
+#include <dirent.h>
 
 #define NB_OPERATIONS 35
 
@@ -18,35 +19,54 @@ void intialisation_operations(Operation lst_operations[]) {
     for (i = 0; i < NB_OPERATIONS; i++) {
         lst_operations[i].id = i;
         lst_operations[i].duree = 0;
-        lst_operations[i].lst_precedents[] = {0};
+        //lst_operations[i].lst_precedents[] = {0};
     }
 }
 
-void contrainte_precedence_avec_temps(Operation lst_operations[], int temps_de_cycle) {
-    /*
-     * Cette fonction permet de verifier si les contraintes de precedence sont respectees
-     * ++ On prend en compte le temps de cycle
-     *
-     *
-     */
 
-    int i;
-    for (i = 0; i < NB_OPERATIONS; i++) {
-        int j;
-        for (j = 0; j < NB_OPERATIONS; j++) {
-            if (lst_operations[i].lst_precedents[j] == 1) { // Si l'operation j est un precedent de l'operation i
-                if (lst_operations[i].duree < lst_operations[j].duree + temps_de_cycle) { // Si l'operation i est plus courte que l'operation j + temps de cycle
-                    // On met a jour la duree de l'operation i
-                    lst_operations[i].duree = lst_operations[j].duree + temps_de_cycle;
-                }
-            }
+void readGraphFromFile(const char *filename, Operation operations[], int *numOperations) {
+
+    FILE *file = fopen("graphe.txt", "r");
+
+    if (file == NULL) {
+        perror("Error opening file");
+        return;
+    }
+
+    *numOperations = 0;
+
+    while (fscanf(file, "%d %d %f", &operations[*numOperations].id,
+                  &operations[*numOperations].lst_precedents[0],
+                  &operations[*numOperations].duree) == 3) {
+        // Increment the operation count
+        (*numOperations)++;
+    }
+
+    fclose(file);
+}
+
+void printOperations(const Operation operations[], int numOperations) {
+    for (int i = 0; i < numOperations; i++) {
+        printf("Operation %d:\n", operations[i].id);
+        printf("  Duration: %.2f\n", operations[i].duree);
+        printf("  Precedents: ");
+
+        for (int j = 0; operations[i].lst_precedents[j] != 0; j++) {
+            printf("%d ", operations[i].lst_precedents[j]);
         }
+
+        printf("\n\n");
     }
 }
-
-
 
 int main() {
-    printf("Hello, World!\n");
+    Operation operations[NB_OPERATIONS];
+    int numOperations = 0;
+
+    // Replace "your_file.txt" with the actual file name
+    readGraphFromFile("your_file.txt", operations, &numOperations);
+
+    printOperations(operations, numOperations);
+
     return 0;
 }
