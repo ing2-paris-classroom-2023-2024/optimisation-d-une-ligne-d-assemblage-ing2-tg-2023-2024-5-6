@@ -47,6 +47,11 @@ void mergeOperations(Operation operations[], int *numOperations) {
             i--;
         }
     }
+    for (int i = 0; i < *numOperations; i++) {
+        for (int j = 0; operations[i].lst_precedents[j] != 0; j++) {
+            if (operations[i].lst_precedents[j] > NB_OPERATIONS) { operations[i].lst_precedents[j] = 0; }
+        }
+    }
 }
 
 
@@ -74,7 +79,7 @@ void readGraphFromFile(Operation operations[], int *numOperations) {
         //si numOperations est superieur a 0, on realloc lst_precedents
         if (*numOperations > 1) {
             operations[*numOperations - 1].lst_precedents = realloc(operations[*numOperations - 1].lst_precedents,
-                                                                     (*numOperations) * sizeof(int));
+                                                                    (*numOperations) * sizeof(int));
         }
         printf("%d ", operations[*numOperations].lst_precedents[0]);
     }
@@ -92,7 +97,6 @@ void Affichage_Operations(const Operation operations[], int numOperations) {
         for (int j = 0; operations[i].lst_precedents[j] != 0; j++) {
             printf("%d |", operations[i].lst_precedents[j]);
         }
-
         printf("\n\n");
     }
 }
