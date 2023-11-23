@@ -51,26 +51,27 @@ void ajouter_arete(Graphe* graphe, int sommet1, int sommet2)
 }
 
 // FONCTION POUR COLORER LE GRAPHE
+// Fonction pour initialiser les couleurs
+void initialiser_couleurs(int* coloration, int nombre_sommets)
+{
+    for (int i = 0; i < nombre_sommets; i++)
+    {
+        coloration[i] = -1; // -1 signifie que le sommet n'est pas coloré
+    }
+}
+
+// Fonction pour colorer le graphe
 void colorer_graphe(Graphe* graphe, int* coloration, int sommet, int nombre_couleurs)
 {
-    // Initialisation de toutes les couleurs à -1 (non coloré)
-    for (int i = 0; i < graphe->nombre_sommets; i++)
-    {
-        coloration[i] = -1; // On utilise -1 pour indiquer que le sommet n'est pas coloré
-    }
+    initialiser_couleurs(coloration, graphe->nombre_sommets);
 
     // Coloration du sommet de départ
-    coloration[0] = 0;
-_________________________________________________________________________________________
+    coloration[sommet] = 0;
+
     // Coloration des autres sommets
     for (int i = 1; i < graphe->nombre_sommets; i++)
     {
-        // Initialisation de toutes les couleurs à 0 (non utilisé)
-        int couleurs_utilisees[nombre_couleurs];
-        for (int j = 0; j < nombre_couleurs; j++)
-        {
-            couleurs_utilisees[j] = 0;
-        }
+        int couleur_utilisee = 0;
 
         // Parcours des sommets adjacents
         for (int j = 0; j < graphe->nombre_sommets; j++)
@@ -78,19 +79,21 @@ ________________________________________________________________________________
             // Si le sommet est adjacent et coloré, on marque la couleur comme utilisée
             if (graphe->matrice_adjacence[i][j] == 1 && coloration[j] != -1)
             {
-                couleurs_utilisees[coloration[j]] = 1;
+                couleur_utilisee |= (1 << coloration[j]); // Utilisation des bits pour marquer les couleurs
             }
         }
 
-        // Parcours des couleurs utilisées pour trouver la première couleur non utilisée
-        for (int j = 0; j < nombre_couleurs; j++)
-        {
-            if (couleurs_utilisees[j] == 0)
-            {
+        // Trouver la première couleur non utilisée
+        for (int j = 0; j < nombre_couleurs; j++) {
+            if (!(couleur_utilisee & (1 << j))) {
                 coloration[i] = j;
                 break;
             }
         }
+    }
+}
+
+
 
 
 
