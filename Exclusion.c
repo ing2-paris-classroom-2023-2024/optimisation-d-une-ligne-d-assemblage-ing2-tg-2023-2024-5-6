@@ -71,7 +71,12 @@ void colorer_graphe(Graphe* graphe, int* coloration, int sommet, int nombre_coul
     // Coloration des autres sommets
     for (int i = 1; i < graphe->nombre_sommets; i++)
     {
-        int couleur_utilisee = 0;
+        // Tableau pour marquer les couleurs utilisées par les voisins
+        int couleurs_utilisees[nombre_couleurs];
+        for (int k = 0; k < nombre_couleurs; k++)
+        {
+            couleurs_utilisees[k] = 0;
+        }
 
         // Parcours des sommets adjacents
         for (int j = 0; j < graphe->nombre_sommets; j++)
@@ -79,13 +84,15 @@ void colorer_graphe(Graphe* graphe, int* coloration, int sommet, int nombre_coul
             // Si le sommet est adjacent et coloré, on marque la couleur comme utilisée
             if (graphe->matrice_adjacence[i][j] == 1 && coloration[j] != -1)
             {
-                couleur_utilisee |= (1 << coloration[j]); // Utilisation des bits pour marquer les couleurs
+                couleurs_utilisees[coloration[j]] = 1;
             }
         }
 
         // Trouver la première couleur non utilisée
-        for (int j = 0; j < nombre_couleurs; j++) {
-            if (!(couleur_utilisee & (1 << j))) {
+        for (int j = 0; j < nombre_couleurs; j++)
+        {
+            if (couleurs_utilisees[j] == 0)
+            {
                 coloration[i] = j;
                 break;
             }
@@ -94,116 +101,64 @@ void colorer_graphe(Graphe* graphe, int* coloration, int sommet, int nombre_coul
 }
 
 
-
-
-
-
-    }
-}
-
-
-/*
- On applique l'allocation dynamique car,
- on ne connait pas la taille du tableau à l'avance
- et on ne sait pas si elle variera au cours du temps.
- */
-
-
-
-
-
-/*
-#define OPERATION_MAX 100
-#define NB_STATIONS_MAX 10
-
-// Structure pour représenter les contraintes d'exclusion
-typedef struct
+// FONCTION POUR LIRE LE GRAPHE A PARTIR D'UN FICHIER
+Graphe* lire_graphe_de_fichier(const char* nom_fichier)
 {
-    int op1;
-    int op2;
-} Exclusion;
-
-// Structure pour représenter la répartition des opérations sur les stations
-typedef struct
-{
-    int station[OPERATION_MAX];
-} Repartition;
-
-
-
-
-// LECTURE DES FICHIERS DE CONTRAINTES
-
-void LireFichierContraintes(char* nomFichier, Exclusion* exclusion, int* nbExclusions)
-{
-    FILE* fichier = fopen(nomFichier, "r");
+    FILE* fichier = fopen(nom_fichier, "r");
     if (fichier == NULL)
     {
-        printf("Erreur lors de l'ouverture du fichier %s\n", nomFichier);
+        perror("Erreur lors de l'ouverture du fichier");
         exit(EXIT_FAILURE);
     }
 
-    fscanf(fichier, "%d", nbExclusions);
+    int nombre_sommets;
+    fscanf(fichier, "%d", &nombre_sommets);
 
-    for (int i = 0; i < *nbExclusions; i++) {
-        fscanf(fichier, "%d %d", &exclusion[i].op1, &exclusion[i].op2);
+    Graphe* graphe = initialiser_graphe(nombre_sommets);
+
+    int sommet1, sommet2;
+    while (fscanf(fichier, "%d %d", &sommet1, &sommet2) == 2) // Lire les sommets de l'arête
+    {
+        ajouter_arete(graphe, sommet1, sommet2);
     }
 
     fclose(fichier);
+
+    return graphe;
 }
 
 
 
 
-// INITIALISATION DE LA REPARTITION DES OPERATIONS SUR LES STATIONS
-
-void initialisationRepartition(Repartition* repartition)
+// FONCTION PRINCIPALE
+int main(int argc, char* argv[])
 {
-    for (int i = 0; i < OPERATION_MAX; i++)
+    if (argc != 3)
     {
-        repartition->station[i] = -1;
+        printf("Usage: %s <nom_fichier_graphe> <nombre_couleurs>\n", argv[0]);
+        return EXIT_FAILURE;
     }
-}
 
+    const char* nom_fichier = argv[1]; // argv[0] est le nom du programme
+    int nombre_couleurs = atoi(argv[2]); // atoi convertit une chaîne de caractères en entier
 
-// SYSTEME DE VERIFICATION DE LA REPARTITION DES OPERATIONS SUR LES STATIONS
+    Graphe* graphe = lire_graphe_de_fichier(nom_fichier);
 
-void verification (Repartition* repartition, Exclusion* exclusion, int nbExclusions)
-{
-    for (int i = 0; i < nbExclusions; i++)
+    // Allocation dynamique de la mémoire pour la coloration
+    int* coloration = (int*)malloc(graphe->nombre_sommets * sizeof(int));
+
+    // Appliquer l'algorithme de coloration
+    colorer_graphe(graphe, coloration, nombre_couleurs, graphe->nombre_sommets);
+
+    // Afficher les couleurs attribuées aux sommets
+    for (int i = 0; i < graphe->nombre_sommets; i++)
     {
-        if (repartition->station[exclusion[i].op1] == repartition->station[exclusion[i].op2])
-        {
-            printf("Erreur : les opérations %d et %d sont sur la même station\n", exclusion[i].op1, exclusion[i].op2);
-            exit(EXIT_FAILURE);
-        }
+        printf("Sommet %d : Couleur %d\n", i, coloration[i]);
     }
+
+    // Libérer la mémoire
+    liberer_graphe(graphe);
+    free(coloration);
+
+    return 0;
 }
-
-
-
-// ATTRIBUTION DE LA REPARTITION DES OPERATIONS SUR LES STATIONS
-
-void attributionRepartition(Repartition* repartition, const Exclusion exclusion[], int nbExclusions)
-{
-    int station = 1;
-    for (int i = 0; i < nbExclusions; i++) {
-        if (repartition->station[exclusion[i].op1 - 1] == -1) {
-            repartition->station[exclusion[i].op1 - 1] = station;
-        }
-
-        if (repartition->station[exclusion[i].op2 - 1] == -1) {
-            repartition->station[exclusion[i].op2 - 1] = station;
-        }
-
-        station = (station % NB_STATIONS_MAX) + 1;
-    }
-}
-
-*/
-
-
-
-
-
-
