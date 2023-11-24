@@ -21,6 +21,7 @@ void intialisation_operations(Operation lst_operations[]) {
             lst_operations[i].lst_precedents[j] = 0;
         }
     }
+    printf("Initialisation des operations terminee.\n");
 }
 
 int cmpfunc(const void *a, const void *b) {
@@ -49,27 +50,32 @@ void mergeOperations(Operation operations[], int *numOperations) {
             if (operations[i].lst_precedents[j] > NB_OPERATIONS) { operations[i].lst_precedents[j] = 0; }
         }
     }
+    printf("Merge des operations terminee.\n");
 }
 
 void readGraphFromFile(Operation operations[], int *numOperations) {
+    printf("Lecture du graphe...\n");
     FILE *file = fopen("graphe.txt", "r");
 
     if (file == NULL) {
         perror("Error opening file");
         return;
     }
+    printf("-----------------1----------------\n");
 
     *numOperations = 0;
     //On transforme lst_precedents en tableau de int avec malloc
     for (int i = 0; i < NB_OPERATIONS; i++) {
         operations[i].lst_precedents = malloc(NB_OPERATIONS * sizeof(int));
     }
+    printf("-----------------2----------------\n");
 
     while (fscanf(file, "%d %d %f", &operations[*numOperations].lst_precedents[0],
                   &operations[*numOperations].id,
                   &operations[*numOperations].duree) == 3) {
         if (operations[*numOperations].lst_precedents[0] > NB_OPERATIONS)
         { operations[*numOperations].lst_precedents[0] = 0; }
+        printf("-----------------3-[%d]--------------\n", *numOperations);
         // Increment the operation count
         (*numOperations)++;
         //si numOperations est superieur a 0, on realloc lst_precedents
@@ -81,6 +87,7 @@ void readGraphFromFile(Operation operations[], int *numOperations) {
     }
     fclose(file);
     printf("---------------------------------\n");
+    printf("Lecture du graphe terminee.\n");
 }
 
 void Affichage_Operations(const Operation operations[], int numOperations) {

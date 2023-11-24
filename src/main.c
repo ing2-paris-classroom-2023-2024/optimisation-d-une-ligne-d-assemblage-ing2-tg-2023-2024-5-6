@@ -6,22 +6,44 @@
 #include <main.h>
 
 #include <initialisation_operations.h>
+#include <Time_module.h>
 
+#include <time.h>
+#include <windows.h>
 
+typedef struct {
+    float current_time;
+} t_clock;
 
-//void initialisation_precedence
+void initializeClock(t_clock *clock) {
+    clock->current_time = 0.0;
+}
 
-//Fonction qui gere la precedence
-// - Prends en parametre un tableau d'operations.
-// - Demande a l'utilisateur de rentrer une operation.
-// - Fonction cherche si le statut de l'operation est a 1 ou a 0.
-// - Retourne le statut de l'operation.
+void tick(t_clock *clock, Operation *operation) {
+    // Simulate the passage of time
+    sleep((unsigned int)operation->duree);
+    printf("Operation %d\n", operation->id);
+
+    // Update the current time
+    clock->current_time += operation->duree;
+}
 
 int gestion_precedence(Operation lst_operations[]) {
     int id_operation;
     printf("Veuillez entrer l'identifiant de l'operation : ");
     scanf("%d", &id_operation);
-    return lst_operations[id_operation].statut_complete;
+    if (id_operation < 0 || id_operation > NB_OPERATIONS) {
+        printf("L'identifiant de l'operation n'est pas correct. Veuillez reessayer.\n");
+        gestion_precedence(lst_operations);
+    }
+    else {
+        if (lst_operations[id_operation].statut_complete == 1) {
+            printf("L'operation est complete.\n");
+        }
+        else {
+            printf("L'operation n'est pas complete.\n");
+        }
+    }
 }
 
 int main() {
@@ -34,10 +56,17 @@ int main() {
     Affichage_Operations(operations, numOperations);
 
     gestion_precedence(operations);
-    if (operations[0].statut_complete == 1) {
-        printf("L'operation est complete");
-    } else {
-        printf("L'operation n'est pas complete");
+
+    //On commence a executer l'Operation 1. Apres la duree, on passe a l'Operation qui suit la 1 (en regardant les precedents)
+    //On continue jusqu'a ce que toutes les Operations soient completees
+    //On affiche le temps total d'execution
+    //On affiche le temps d'execution de chaque Operation
+
+    t_clock clock;
+    initializeClock(&clock);
+
+    for (int i = 0; i < numOperations; i++) {
+        tick(&clock, &operations[i]);
     }
 
     return 0;

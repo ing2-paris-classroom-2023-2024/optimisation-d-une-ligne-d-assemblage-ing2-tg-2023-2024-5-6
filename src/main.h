@@ -13,7 +13,7 @@ typedef struct {
     int statut_complete; // 0 = non complete, 1 = complete
 } Operation;
 
-#define NB_OPERATIONS 35
+#define NB_OPERATIONS 37
 
 
 #endif
