@@ -61,21 +61,17 @@ void readGraphFromFile(Operation operations[], int *numOperations) {
         perror("Error opening file");
         return;
     }
-    printf("-----------------1----------------\n");
 
     *numOperations = 0;
     //On transforme lst_precedents en tableau de int avec malloc
     for (int i = 0; i < NB_OPERATIONS; i++) {
         operations[i].lst_precedents = malloc(NB_OPERATIONS * sizeof(int));
     }
-    printf("-----------------2----------------\n");
 
-    while (fscanf(file, "%d %d %f", &operations[*numOperations].lst_precedents[0],
-                  &operations[*numOperations].id,
-                  &operations[*numOperations].duree) == 3) {
+    while (fscanf(file, "%d %d", &operations[*numOperations].lst_precedents[0],
+                  &operations[*numOperations].id) == 2) {
         if (operations[*numOperations].lst_precedents[0] > NB_OPERATIONS)
         { operations[*numOperations].lst_precedents[0] = 0; }
-        printf("-----------------3-[%d]--------------\n", *numOperations);
         // Increment the operation count
         (*numOperations)++;
         //si numOperations est superieur a 0, on realloc lst_precedents
@@ -96,8 +92,13 @@ void Affichage_Operations(const Operation operations[], int numOperations) {
         printf("Operation %d:\n", operations[i].id);
         printf("  Duration: %.2f\n", operations[i].duree);
         printf("  Status: %d\n", operations[i].statut_complete);
-        printf("  Precedents: ");
+        printf("  Successors: ");
 
+        for (int j = 0; operations[i].lst_successeurs[j] != 0; j++) {
+            printf("%d |", operations[i].lst_successeurs[j]);
+        }
+        printf("\n");
+        printf("  Precedents: ");
         for (int j = 0; operations[i].lst_precedents[j] != 0; j++) {
             printf("%d |", operations[i].lst_precedents[j]);
         }

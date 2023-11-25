@@ -46,6 +46,103 @@ int gestion_precedence(Operation lst_operations[]) {
     }
 }
 
+int find_missing_operations(Operation op[], int numOperation, int missing[]) {
+
+    int numMissing = 0;
+    // Create a boolean array to mark the presence of operations
+    int presence[NB_OPERATIONS-1]; // +1 to account for 1-based indexing
+
+    for (int i = 0; i < NB_OPERATIONS-1; i++) {
+        presence[i] = 0; // Initialize to 0, indicating the operation is missing
+    }
+
+    // Mark the presence of existing operations
+    for (int i = 0; i < NB_OPERATIONS; i++) {
+        presence[op[i].id] = 1;
+    }
+
+    // Find and store missing operations in the 'missing' array
+    for (int i = 1; i < NB_OPERATIONS-1; i++) {
+        if (presence[i] == 0) {
+            missing[numMissing] = i;
+            numMissing++;
+        }
+    }
+
+    return numMissing;
+
+}
+
+void matrice_to_array(int matrice[][NB_OPERATIONS], Operation op[]) {
+    int missing[NB_OPERATIONS];
+    int numMissing = find_missing_operations(op, NB_OPERATIONS, missing);
+
+    for (int k = 0; k < NB_OPERATIONS; k++) {
+        int size = NB_OPERATIONS - numMissing;
+        op[k].lst_successeurs = malloc(size * sizeof(int));
+    }
+
+
+
+    for (int i = 0; i < NB_OPERATIONS; i++) {
+        int indice = 0;
+        for (int j = 0; j < NB_OPERATIONS; j++) {
+            if (matrice[i][j] == 1) {
+                int adjustedIndex = j + 1;
+                for (int m = 0; m < numMissing; m++) {
+                    if (missing[m] <= adjustedIndex) {
+                        adjustedIndex++;
+                    }
+                }
+                printf("Operation %d: %d\n", i+1, adjustedIndex);
+                op[i].lst_successeurs[indice] = adjustedIndex;
+                indice++;
+            }
+        }
+    }
+}
+
+
+
+int initialisation_successeurs(Operation lst_operations[]) {
+    //Avec le tableau de precedence, nous allons l'interser.
+    //Cela falicitera la recherche de l'operation suivante.
+    //Par exemple, si le precendent de 6 est 1, alors dans le nouveau tableau, l'operation 1 contiendra 6 dans son tableau de successeurs.
+    //On pourra donc trouver l'operation suivante en cherchant dans le tableau de successeurs de l'operation precedente.
+
+    //On cree un tableau de successeurs
+    int tableau_successeurs[NB_OPERATIONS][NB_OPERATIONS];
+
+    for (int i = 0; i < NB_OPERATIONS; i++) {
+        for (int j = 0; j < NB_OPERATIONS; j++) {
+            tableau_successeurs[i][j] = 0;
+        }
+    }
+
+    //On remplit le tableau de successeurs
+    for (int i = 0; i < NB_OPERATIONS; i++) {
+        for (int j = 0; lst_operations[i].lst_precedents[j] != 0; j++) {
+            //Si j est present dans le tableau de precedents de i, alors i est present dans le tableau de successeurs de j
+            tableau_successeurs[lst_operations[i].lst_precedents[j] - 1][i] = 1;
+        }
+    }
+
+    //Affichage du tableau de successeurs
+    for (int i = 0; i < NB_OPERATIONS; i++) {
+        printf("Operation %d: ", i + 1);
+        for (int j = 0; j < NB_OPERATIONS; j++) {
+            printf("%d ", tableau_successeurs[i][j]);
+        }
+        printf("\n");
+    }
+
+    matrice_to_array(tableau_successeurs, lst_operations);
+
+    printf("Initialisation des successeurs terminee.\n");
+}
+
+
+
 int main() {
     Operation operations[NB_OPERATIONS];
     int numOperations = 0;
@@ -53,21 +150,26 @@ int main() {
     readGraphFromFile(operations, &numOperations);
     mergeOperations(operations, &numOperations);
 
+    initialisation_duree(operations);
+    initialisation_successeurs(operations);
+
+
     Affichage_Operations(operations, numOperations);
 
-    gestion_precedence(operations);
+    //gestion_precedence(operations);
 
     //On commence a executer l'Operation 1. Apres la duree, on passe a l'Operation qui suit la 1 (en regardant les precedents)
     //On continue jusqu'a ce que toutes les Operations soient completees
     //On affiche le temps total d'execution
     //On affiche le temps d'execution de chaque Operation
 
+    /*
     t_clock clock;
     initializeClock(&clock);
 
     for (int i = 0; i < numOperations; i++) {
         tick(&clock, &operations[i]);
-    }
+    }*/
 
     return 0;
 }
