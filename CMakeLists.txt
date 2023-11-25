@@ -13,4 +13,5 @@ add_executable(optimisation_d_une_ligne_d_assemblage_ing2_tg_2023_2024_5_6
         src/initialisation_operations.c
         src/initialisation_operations.h
         src/Time_module.c
-        src/Time_module.h)
+        src/Time_module.h
+        src/Time_module.c)

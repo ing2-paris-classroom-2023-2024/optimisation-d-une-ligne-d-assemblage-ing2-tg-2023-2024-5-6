@@ -10,20 +10,6 @@
 #include <dirent.h>
 #include <main.h>
 
-void intialisation_operations(Operation lst_operations[]) {
-    int i;
-    for (i = 0; i < NB_OPERATIONS; i++) {
-        lst_operations[i].id = i;
-        lst_operations[i].duree = 0;
-        lst_operations[i].statut_complete = 0;
-        //Initailiser toute valeur de precedents a 0
-        for (int j = 0; j < NB_OPERATIONS; j++) {
-            lst_operations[i].lst_precedents[j] = 0;
-        }
-    }
-    printf("Initialisation des operations terminee.\n");
-}
-
 int cmpfunc(const void *a, const void *b) {
     Operation *operationA = (Operation *)a;
     Operation *operationB = (Operation *)b;
@@ -66,6 +52,7 @@ void readGraphFromFile(Operation operations[], int *numOperations) {
     //On transforme lst_precedents en tableau de int avec malloc
     for (int i = 0; i < NB_OPERATIONS; i++) {
         operations[i].lst_precedents = malloc(NB_OPERATIONS * sizeof(int));
+        operations[i].statut_complete = 0;
     }
 
     while (fscanf(file, "%d %d", &operations[*numOperations].lst_precedents[0],
@@ -88,20 +75,23 @@ void readGraphFromFile(Operation operations[], int *numOperations) {
 
 void Affichage_Operations(const Operation operations[], int numOperations) {
     // Fonction d'affichage des opérations
-    for (int i = 0; i < numOperations; i++) {
-        printf("Operation %d:\n", operations[i].id);
+    for (int i = 0; i < NB_OPERATIONS-2; i++) {
+        printf("Operation %d: ", i + 1);
         printf("  Duration: %.2f\n", operations[i].duree);
         printf("  Status: %d\n", operations[i].statut_complete);
-        printf("  Successors: ");
 
+        printf("  Successors: ");
         for (int j = 0; operations[i].lst_successeurs[j] != 0; j++) {
-            printf("%d |", operations[i].lst_successeurs[j]);
+            printf(" %d ", operations[i].lst_successeurs[j]);
         }
         printf("\n");
-        printf("  Precedents: ");
+
+
+
+        /*printf("  Precedents: ");
         for (int j = 0; operations[i].lst_precedents[j] != 0; j++) {
             printf("%d |", operations[i].lst_precedents[j]);
         }
-        printf("\n\n");
+        printf("\n\n");*/
     }
 }

@@ -17,7 +17,7 @@
 #include <Time_module.h>
 
 //Initisalisation de la duree pour chaque operations en utilisant le .txt "operations.txt"
-void initialisation_duree(Operation lst_operations[]) {
+void initialisation_duree(Operation operations[]) {
     FILE *file = fopen("operations.txt", "r");
 
     if (file == NULL) {
@@ -25,17 +25,22 @@ void initialisation_duree(Operation lst_operations[]) {
         exit(1);
     }
 
-    int id_operation;
-    float duree_operation;
-    int indice = 0;
+    int id;
+    float duration;
 
-    while (fscanf(file, "%d %f", &id_operation, &duree_operation) != EOF) {
-        lst_operations[indice].duree = duree_operation;
-        printf("Operation %d : %f [Indice dans tableau: %d]\n", id_operation, duree_operation, id_operation-1);
-        indice++;
+    while (fscanf(file, "%d %f", &id, &duration) == 2) {
+        operations[id - 1].duree = duration; // Assuming IDs start from 1
     }
 
     fclose(file);
+
+    // Handle missing operations (set duration to 0)
+    for (int i = 0; i < NB_OPERATIONS; i++) {
+        if (operations[i].duree <= 0 || operations[i].duree > TEMPS_DE_CYCLE) {
+            // Set duration to 0 for missing operations
+            operations[i].duree = 0;
+        }
+    }
     printf("Initialisation des durees terminee.\n");
 }
 

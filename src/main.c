@@ -80,25 +80,42 @@ void matrice_to_array(int matrice[][NB_OPERATIONS], Operation op[]) {
     for (int k = 0; k < NB_OPERATIONS; k++) {
         int size = NB_OPERATIONS - numMissing;
         op[k].lst_successeurs = malloc(size * sizeof(int));
+        op[k].lst_successeurs[0] = 0;
     }
-
-
-
     for (int i = 0; i < NB_OPERATIONS; i++) {
         int indice = 0;
         for (int j = 0; j < NB_OPERATIONS; j++) {
             if (matrice[i][j] == 1) {
                 int adjustedIndex = j + 1;
+                printf("==========================\n");
                 for (int m = 0; m < numMissing; m++) {
                     if (missing[m] <= adjustedIndex) {
                         adjustedIndex++;
+                        //printf("Nombre manquant missing[%d]\n", missing[m]);
                     }
                 }
-                printf("Operation %d: %d\n", i+1, adjustedIndex);
-                op[i].lst_successeurs[indice] = adjustedIndex;
+
+                //printf("INDEX: %d\n", adjustedIndex);
+                //printf("Matrice[%d][%d]\n", i, j);
+                //printf("Operation %d [indice: %d]: %d\n", i+1, indice, adjustedIndex);
+                //Assurer que l'operation est bien borne entre 1 et NB_OPERATIONS
+                if (0 < adjustedIndex && adjustedIndex < NB_OPERATIONS) {
+                    printf("Operation %d [indice: %d]: %d\n", i+1, indice, adjustedIndex);
+                    op[i].lst_successeurs[indice] = adjustedIndex;
+                    printf("Operation[%d].lst_successeurs[%d] = %d\n", i, indice, op[i].lst_successeurs[indice]);
+                }
                 indice++;
             }
         }
+        op[i].lst_successeurs[indice] = 0;
+    }
+    //Affichage des successeurs
+    for (int i = 0; i < NB_OPERATIONS; i++) {
+        printf("Operation %d: ", i + 1);
+        for (int j = 0; op[i].lst_successeurs[j] != 0; j++) {
+            printf("%d ", op[i].lst_successeurs[j]);
+        }
+        printf("\n");
     }
 }
 
@@ -129,7 +146,7 @@ int initialisation_successeurs(Operation lst_operations[]) {
 
     //Affichage du tableau de successeurs
     for (int i = 0; i < NB_OPERATIONS; i++) {
-        printf("Operation %d: ", i + 1);
+        //printf("Operation %d: ", i + 1);
         for (int j = 0; j < NB_OPERATIONS; j++) {
             printf("%d ", tableau_successeurs[i][j]);
         }
