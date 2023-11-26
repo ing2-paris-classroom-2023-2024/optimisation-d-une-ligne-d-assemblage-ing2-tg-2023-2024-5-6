@@ -46,116 +46,165 @@ int gestion_precedence(Operation lst_operations[]) {
     }
 }
 
-int find_missing_operations(Operation op[], int numOperation, int missing[]) {
 
-    int numMissing = 0;
-    // Create a boolean array to mark the presence of operations
-    int presence[NB_OPERATIONS-1]; // +1 to account for 1-based indexing
+int P_est_vide(int P[]) {
+    //Fonction qui verifie si la pile est vide
+    if (P[0] == 0) {
+        return 1;
+    }
+    else {
+        return 0;
+    }
+}
 
-    for (int i = 0; i < NB_OPERATIONS-1; i++) {
-        presence[i] = 0; // Initialize to 0, indicating the operation is missing
+int recherche_indice_id(int id, Operation op[], int numOperation) {
+    //Fonction qui recherche l'indice d'une operation dans le tableau d'operations
+    int targetIndex = -1;
+    for (int i = 0; i < numOperation; i++) {
+        if (op[i].id == id) {
+            targetIndex = i;
+            break;
+        }
+    }
+    return targetIndex;
+}
+
+int recherche_sucesseurs(Operation op[], int id, int lst_sucesseurs[], int numOperation) {
+    // Fonction qui recherche les successeurs d'une operation
+    int numSuccessors = 0;
+
+    printf("|RS| ID: %d\n", id);
+
+    // On recupere l'indice de l'operation dans le tableau d'operations
+    int indice = recherche_indice_id(id, op, numOperation);
+    printf("|RS| INDICE: %d\n", indice);
+    //Affichage du premier successeur
+    printf("Operation[%d].lst_successeurs[0] = %d\n", indice, op[indice].lst_successeurs[0]);
+
+
+    // Check if the target operation ID is not found
+    if (indice == -1) {
+        printf("Operation with ID %d not found.\n", id);
+        return -1;
     }
 
-    // Mark the presence of existing operations
-    for (int i = 0; i < NB_OPERATIONS; i++) {
-        presence[op[i].id] = 1;
+    // Check if the target operation has no successors
+    if (op[indice].lst_successeurs[0] == 0) {
+        printf("Operation with ID %d has no successors.\n", id);
+        return 0;
     }
-
-    // Find and store missing operations in the 'missing' array
-    for (int i = 1; i < NB_OPERATIONS-1; i++) {
-        if (presence[i] == 0) {
-            missing[numMissing] = i;
-            numMissing++;
+    else {
+        for (int i = 0; op[indice].lst_successeurs[i] != 0; i++) {
+            printf("Operation[%d].lst_successeurs[%d] = %d\n", indice, i, op[indice].lst_successeurs[i]);
+            lst_sucesseurs[i] = op[indice].lst_successeurs[i];
+            numSuccessors++;
         }
     }
 
-    return numMissing;
-
-}
-
-void matrice_to_array(int matrice[][NB_OPERATIONS], Operation op[]) {
-    int missing[NB_OPERATIONS];
-    int numMissing = find_missing_operations(op, NB_OPERATIONS, missing);
-
-    for (int k = 0; k < NB_OPERATIONS; k++) {
-        int size = NB_OPERATIONS - numMissing;
-        op[k].lst_successeurs = malloc(size * sizeof(int));
-        op[k].lst_successeurs[0] = 0;
-    }
-    for (int i = 0; i < NB_OPERATIONS; i++) {
-        int indice = 0;
-        for (int j = 0; j < NB_OPERATIONS; j++) {
-            if (matrice[i][j] == 1) {
-                int adjustedIndex = j + 1;
-                printf("==========================\n");
-                for (int m = 0; m < numMissing; m++) {
-                    if (missing[m] <= adjustedIndex) {
-                        adjustedIndex++;
-                        //printf("Nombre manquant missing[%d]\n", missing[m]);
-                    }
+    // Sort the lst_sucesseurs array based on the duration of the operations
+    if (numSuccessors > 1) {
+        for (int i = 0; i < numSuccessors - 1; i++) {
+            for (int j = 0; j < numSuccessors - i - 1; j++) {
+                // Compare durations directly without using recherche_indice_id
+                if (op[lst_sucesseurs[j] - 1].duree > op[lst_sucesseurs[j + 1] - 1].duree) {
+                    // Swap indices if the duration is longer
+                    int temp = lst_sucesseurs[j];
+                    lst_sucesseurs[j] = lst_sucesseurs[j + 1];
+                    lst_sucesseurs[j + 1] = temp;
                 }
-
-                //printf("INDEX: %d\n", adjustedIndex);
-                //printf("Matrice[%d][%d]\n", i, j);
-                //printf("Operation %d [indice: %d]: %d\n", i+1, indice, adjustedIndex);
-                //Assurer que l'operation est bien borne entre 1 et NB_OPERATIONS
-                if (0 < adjustedIndex && adjustedIndex < NB_OPERATIONS) {
-                    printf("Operation %d [indice: %d]: %d\n", i+1, indice, adjustedIndex);
-                    op[i].lst_successeurs[indice] = adjustedIndex;
-                    printf("Operation[%d].lst_successeurs[%d] = %d\n", i, indice, op[i].lst_successeurs[indice]);
-                }
-                indice++;
             }
         }
-        op[i].lst_successeurs[indice] = 0;
     }
-    //Affichage des successeurs
-    for (int i = 0; i < NB_OPERATIONS; i++) {
-        printf("Operation %d: ", i + 1);
-        for (int j = 0; op[i].lst_successeurs[j] != 0; j++) {
-            printf("%d ", op[i].lst_successeurs[j]);
-        }
-        printf("\n");
+
+
+    // Affichage des successeurs
+    printf("=======================\n");
+    for (int i = 0; i < numSuccessors; i++) {
+        printf("Operation %d: %d\n", i + 1, lst_sucesseurs[i]);
     }
+    printf("=======================\n");
+
+    return numSuccessors;
 }
 
 
-
-int initialisation_successeurs(Operation lst_operations[]) {
-    //Avec le tableau de precedence, nous allons l'interser.
-    //Cela falicitera la recherche de l'operation suivante.
-    //Par exemple, si le precendent de 6 est 1, alors dans le nouveau tableau, l'operation 1 contiendra 6 dans son tableau de successeurs.
-    //On pourra donc trouver l'operation suivante en cherchant dans le tableau de successeurs de l'operation precedente.
-
-    //On cree un tableau de successeurs
-    int tableau_successeurs[NB_OPERATIONS][NB_OPERATIONS];
-
-    for (int i = 0; i < NB_OPERATIONS; i++) {
-        for (int j = 0; j < NB_OPERATIONS; j++) {
-            tableau_successeurs[i][j] = 0;
-        }
+int id_in_pile(int id, int Pile[]) {
+    //Fonction qui verifie si l'id est dans la pile
+    int i = 0;
+    while (Pile[i] != 0) {
+        if (Pile[i] == id) { return 1; }
+        i++;
     }
+    return 0;
+}
 
-    //On remplit le tableau de successeurs
-    for (int i = 0; i < NB_OPERATIONS; i++) {
-        for (int j = 0; lst_operations[i].lst_precedents[j] != 0; j++) {
-            //Si j est present dans le tableau de precedents de i, alors i est present dans le tableau de successeurs de j
-            tableau_successeurs[lst_operations[i].lst_precedents[j] - 1][i] = 1;
-        }
+
+void traverse_operations(Operation op[], int startOperation, int numOperation) {
+    for (int i = 0; i < numOperation; i++) {
+        printf("%d: %d\n", op[i].id, op[i].lst_successeurs[0]);
     }
-
-    //Affichage du tableau de successeurs
-    for (int i = 0; i < NB_OPERATIONS; i++) {
-        //printf("Operation %d: ", i + 1);
-        for (int j = 0; j < NB_OPERATIONS; j++) {
-            printf("%d ", tableau_successeurs[i][j]);
-        }
-        printf("\n");
+    printf("----------------------------------TRAVERSE-----------------------------------------\n");
+    //Defintion d'une pile de NB_OPERATIONS lignes
+    int Pile[NB_OPERATIONS];
+    Pile[0] = op[startOperation].id;
+    int i = 0;
+    for (int j = 1; j < NB_OPERATIONS; j++) {
+        Pile[j] = 0;
     }
+    printf("Operation de debut: %d\n", Pile[0]);
 
-    matrice_to_array(tableau_successeurs, lst_operations);
+    while (i < NB_OPERATIONS) {
+        //Affichage de la pile
+        printf("Pile: ");
+        for (int j = 0; j < NB_OPERATIONS; j++) { printf("%d ", Pile[j]); }
 
-    printf("Initialisation des successeurs terminee.\n");
+        int lst_sucesseurs[NB_OPERATIONS];
+        lst_sucesseurs[0] = 0;      //Initialisation de la liste des successeurs
+        printf("\n135\n");
+
+        //si id possede un successeur
+        int indice = recherche_indice_id(Pile[i], op, numOperation);
+        printf("|||Traverse||| i: %d |/| INDICE: %d |/| Operation: %d", i, indice, Pile[i]);
+        recherche_sucesseurs(op, Pile[i], lst_sucesseurs, numOperation);
+        printf("||||LST_SUCCESSEURS[0]: %d\n", lst_sucesseurs[0]);
+        int num_sucessors = 1;
+        if (op[indice].lst_successeurs[0] != 0) {
+
+            printf("139\n");
+            //recherche_sucesseurs(op, Pile[i], lst_sucesseurs, numOperation);
+
+            while (lst_sucesseurs[0] != 0) {
+                printf("139\n");
+                printf("|140||LST_SUCCESSEURS[0]: %d\n", lst_sucesseurs[0]);
+                int id = lst_sucesseurs[0];
+                int j = 0;
+                while (lst_sucesseurs[j] != 0) {
+                    lst_sucesseurs[j] = lst_sucesseurs[j + 1];
+                    j++;
+                }
+                printf("145\n");
+                printf("ID: %d\n", id);
+                if (id_in_pile(id, Pile)) {
+                    printf("id_in_pile\n");
+                    //Si l'id est dans la pile, on ne fait rien
+                    break;
+                }
+                else {
+                    printf("id_not_in_pile\n");
+                    //Sinon, on l'ajoute a la pile
+                    //REcherche de l'indice de la pile ou valeur  = 0
+                    int k = 0;
+                    while (Pile[k] != 0) {
+                        k++;
+                    }
+                    Pile[k] = id;
+                    num_sucessors++;
+                }
+                printf("165\n");
+            }
+        }
+        i++;
+    }
 }
 
 
@@ -164,6 +213,7 @@ int main() {
     Operation operations[NB_OPERATIONS];
     int numOperations = 0;
 
+
     readGraphFromFile(operations, &numOperations);
     mergeOperations(operations, &numOperations);
 
@@ -171,7 +221,11 @@ int main() {
     initialisation_successeurs(operations);
 
 
-    Affichage_Operations(operations, numOperations);
+
+
+    //Affichage_Operations(operations, numOperations);
+
+    traverse_operations(operations, 0, numOperations);
 
     //gestion_precedence(operations);
 

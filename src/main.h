@@ -17,7 +17,7 @@ typedef struct {
     int statut_complete; // 0 = non complete, 1 = complete
 } Operation;
 
-
+int recherche_indice_id(int id, Operation op[], int numOperation);
 
 
 #endif

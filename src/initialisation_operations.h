@@ -7,7 +7,10 @@
 
 #include <main.h>
 
-void intialisation_operations(Operation lst_operations[]);
+int find_missing_operations(Operation op[], int numOperation, int missing[]);
+void matrice_to_array(int matrice[][NB_OPERATIONS], Operation op[]);
+int initialisation_successeurs(Operation lst_operations[]);
+
 void mergeOperations(Operation operations[], int *numOperations);
 void readGraphFromFile(Operation operations[], int *numOperations);
 void Affichage_Operations(const Operation operations[], int numOperations);
