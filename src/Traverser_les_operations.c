@@ -44,27 +44,27 @@ int recherche_sucesseurs(Operation op[], int id, int lst_sucesseurs[], int numOp
     // Fonction qui recherche les successeurs d'une operation
     int numSuccessors = 0;
 
-    printf("|RS| ID: %d\n", id);
+   // printf("|RS| ID: %d\n", id);
 
     // On recupere l'indice de l'operation dans le tableau d'operations
     int indice = recherche_indice_id(id, op, numOperation);
-    printf("|RS| INDICE: %d\n", indice);
+    //printf("|RS| INDICE: %d\n", indice);
     //Affichage du premier successeur
-    printf("Operation[%d].lst_successeurs[0] = %d\n", indice, op[indice].lst_successeurs[0]);
+    //printf("Operation[%d].lst_successeurs[0] = %d\n", indice, op[indice].lst_successeurs[0]);
 
     if (indice == -1) {
-        printf("Operation with ID %d not found.\n", id);
+        //printf("Operation with ID %d not found.\n", id);
         return -1;
     }
 
     // Si l'operation n'a pas de successeurs
     if (op[indice].lst_successeurs[0] == 0) {
-        printf("Operation with ID %d has no successors.\n", id);
+        //printf("Operation with ID %d has no successors.\n", id);
         return 0;
     }
     else {
         for (int i = 0; op[indice].lst_successeurs[i] != 0; i++) {
-            printf("Operation[%d].lst_successeurs[%d] = %d\n", indice, i, op[indice].lst_successeurs[i]);
+            //printf("Operation[%d].lst_successeurs[%d] = %d\n", indice, i, op[indice].lst_successeurs[i]);
             lst_sucesseurs[i] = op[indice].lst_successeurs[i];
             numSuccessors++;
         }
@@ -83,14 +83,14 @@ int recherche_sucesseurs(Operation op[], int id, int lst_sucesseurs[], int numOp
             }
         }
     }
-
-
-    // Affichage des successeurs
-    printf("=======================\n");
+    //Affichage des successeurs
+    printf("Successeurs de l'operation %d: ", id);
     for (int i = 0; i < numSuccessors; i++) {
-        printf("Operation %d: %d\n", i + 1, lst_sucesseurs[i]);
+        printf("%d ", lst_sucesseurs[i]);
     }
-    printf("=======================\n");
+    printf("\n");
+    printf("================================\n");
+
 
     return numSuccessors;
 }
@@ -130,59 +130,57 @@ void traverse_operations(Operation op[], int startOperation, int numOperation) {
     //  Effectue un parcours en profondeur du graphe des opérations
     //  En commençant par une opération spécifiée et en visitant ses successeurs.
 
-
-    for (int i = 0; i < numOperation; i++) {
-        printf("%d: %d\n", op[i].id, op[i].lst_successeurs[0]);
-    }
     // Definition d'une pile de NB_OPERATIONS lignes
     int Pile[NB_OPERATIONS];
-    Pile[0] = op[startOperation].id;
-    op[startOperation].statut_complete = 1;
+    int indice = 0;
+    //Ajout dans la Pile toute les operations avec 0 comme precedent
+    for (int i = 0; i < NB_OPERATIONS; i++) {
+        if (op[i].lst_precedents[0] == 0) {
+            Pile[indice] = op[i].id;
+            op[i].statut_complete = 1;
+            indice++;
+        }
+    }
+
+    //Pile[0] = op[startOperation].id;
+    //op[startOperation].statut_complete = 1;
     int i = 0;
-    for (int j = 1; j < NB_OPERATIONS; j++) {
+    for (int j = indice; j < NB_OPERATIONS; j++) {
         Pile[j] = 0;
     }
     printf("Operation de debut: %d\n", Pile[0]);
 
     while (i < NB_OPERATIONS) {
         // Affichage de la pile
-        printf("Pile: ");
+        /*printf("Pile: ");
         for (int j = 0; j < NB_OPERATIONS; j++) {
             if (Pile[j] != 0) {
                 printf("%d ", Pile[j]);
             }
-        }
+        }*/
 
         int lst_successeurs[NB_OPERATIONS];
         lst_successeurs[0] = 0; // Initialisation de la liste des successeurs
-        printf("\n135\n");
 
         // si id possede un successeur
         int indice = recherche_indice_id(Pile[i], op, numOperation);
-        printf("|||Traverse||| i: %d |/| INDICE: %d |/| Operation: %d", i, indice, Pile[i]);
         recherche_sucesseurs(op, Pile[i], lst_successeurs, numOperation);
-        printf("||||LST_SUCCESSEURS[0]: %d\n", lst_successeurs[0]);
         int num_successors = 1;
         if (op[indice].lst_successeurs[0] != 0) {
-            printf("139\n");
 
             while (lst_successeurs[0] != 0) {
-                printf("139\n");
-                printf("|140||LST_SUCCESSEURS[0]: %d\n", lst_successeurs[0]);
                 int id = lst_successeurs[0];
                 int j = 0;
                 while (lst_successeurs[j] != 0) {
                     lst_successeurs[j] = lst_successeurs[j + 1];
                     j++;
                 }
-                printf("145\n");
-                printf("ID: %d\n", id);
                 if (id_in_pile(id, Pile)) {
-                    printf("id_in_pile\n");
+                    //printf("id_in_pile\n");
                     // Si l'id est dans la pile, on ne fait rien
                     break;
                 } else {
-                    printf("id_not_in_pile\n");
+                    //printf("id_not_in_pile\n");
                     // Sinon, on l'ajoute a la pile si tous les precedents ont statut_complete = 1
                     if (recherche_precedents(op, id)) {
                         // Recherche de l'indice de la pile ou valeur = 0
@@ -195,12 +193,19 @@ void traverse_operations(Operation op[], int startOperation, int numOperation) {
                         int addedOperationIndex = recherche_indice_id(id, op, NB_OPERATIONS);
                         op[addedOperationIndex].statut_complete = 1;
                         num_successors++;
-                    } else {
+                        //sleep(5*(unsigned int)op[addedOperationIndex].duree);
+                        printf("Pile: ");
+                        for (int j = 0; j < NB_OPERATIONS; j++) {
+                            if (Pile[j] != 0) {
+                                printf("%d ", Pile[j]);
+                            }
+                        }
+                        printf("\n");
+                    } /*else {
                         printf("Tout precedents ne sont pas completes\n");
-                    }
+                    }*/
                 }
 
-                printf("165\n");
             }
         }
         i++;

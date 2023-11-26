@@ -9,7 +9,6 @@
 
 int find_missing_operations(Operation op[], int numOperation, int missing[]);
 void matrice_to_lst(int matrice[][NB_OPERATIONS], Operation op[]);
-i
 
 
 void Affichage_Operations(const Operation operations[], int numOperations);
@@ -19,6 +18,6 @@ void Affichage_Operations(const Operation operations[], int numOperations);
  ******************/
 void fusion_Operations(Operation operations[], int *numOperations);
 void lecture_de_fichier(Operation operations[], int *numOperations);
-nt initialisation_successeurs(Operation lst_operations[]);
+int initialisation_successeurs(Operation lst_operations[]);
 
 #endif //OPTIMISATION_D_UNE_LIGNE_D_ASSEMBLAGE_ING2_TG_2023_2024_5_6_INITIALISATION_OPERATIONS_H

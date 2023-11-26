@@ -57,3 +57,21 @@ void tick(t_clock *clock, Operation *operation) {
     // Update the current time
     clock->current_time += operation->duree;
 }
+
+void affichage_attributs_operations(Operation op[], int numOperation) {
+    //Fonction qui affiche les attributs de chaque operation
+    for (int i = 0; i < numOperation; i++) {
+        printf("Operation %d:\n", op[i].id);
+        printf("  duree: %f\n", op[i].duree);
+        printf("  statut_complete: %d\n", op[i].statut_complete);
+        printf("  lst_successeurs: ");
+        for (int j = 0; j < NB_OPERATIONS; j++) {
+            printf("%d ", op[i].lst_successeurs[j]);
+        }
+        printf("\n");
+        printf("  lst_precedents: ");
+        for (int j = 0; j < NB_OPERATIONS; j++) {
+            printf("%d ", op[i].lst_precedents[j]);
+        }
+    }
+}

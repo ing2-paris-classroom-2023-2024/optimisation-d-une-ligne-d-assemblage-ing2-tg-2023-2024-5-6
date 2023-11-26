@@ -24,7 +24,7 @@ int main() {
     initialisation_duree(operations);
     initialisation_successeurs(operations);
 
-
+    affichage_attributs_operations(operations, numOperations);
 
 
     //Affichage_Operations(operations, numOperations);
