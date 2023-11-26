@@ -3,6 +3,7 @@
 //
 
 #include "initialisation_operations.h"
+#include <Traverser_les_operations.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -13,20 +14,19 @@
 
 int find_missing_operations(Operation op[], int numOperation, int missing[]) {
 
-    int numMissing = 0;
-    // Create a boolean array to mark the presence of operations
-    int presence[NB_OPERATIONS-1]; // +1 to account for 1-based indexing
+    int numMissing = 0; // Booleen indiquant si l'operation est manquante
+
+    int presence[NB_OPERATIONS-1];
 
     for (int i = 0; i < NB_OPERATIONS-1; i++) {
-        presence[i] = 0; // Initialize to 0, indicating the operation is missing
+        // On initialise le tableau de presence a 0
+        presence[i] = 0;
     }
 
-    // Mark the presence of existing operations
     for (int i = 0; i < NB_OPERATIONS; i++) {
         presence[op[i].id] = 1;
     }
 
-    // Find and store missing operations in the 'missing' array
     for (int i = 1; i < NB_OPERATIONS-1; i++) {
         if (presence[i] == 0) {
             missing[numMissing] = i;
@@ -38,7 +38,7 @@ int find_missing_operations(Operation op[], int numOperation, int missing[]) {
 
 }
 
-void matrice_to_array(int matrice[][NB_OPERATIONS], Operation op[]) {
+void matrice_to_lst(int matrice[][NB_OPERATIONS], Operation op[]) {
     int missing[NB_OPERATIONS];
     int numMissing = find_missing_operations(op, NB_OPERATIONS, missing);
 
@@ -52,42 +52,40 @@ void matrice_to_array(int matrice[][NB_OPERATIONS], Operation op[]) {
         for (int j = 0; j < NB_OPERATIONS; j++) {
             if (matrice[i][j] == 1) {
                 int adjustedIndex = j + 1;
-                //printf("==========================\n");
                 for (int m = 0; m < numMissing; m++) {
                     if (missing[m] <= adjustedIndex) {
                         adjustedIndex++;
-                        //printf("Nombre manquant missing[%d]\n", missing[m]);
                     }
                 }
 
-                //printf("INDEX: %d\n", adjustedIndex);
-                //printf("Matrice[%d][%d]\n", i, j);
-                //printf("Operation %d [indice: %d]: %d\n", i+1, indice, adjustedIndex);
-                //Assurer que l'operation est bien borne entre 1 et NB_OPERATIONS
                 if (0 < adjustedIndex && adjustedIndex < NB_OPERATIONS) {
-                    //printf("Operation %d [indice: %d]: %d\n", i+1, indice, adjustedIndex);
                     op[i].lst_successeurs[indice] = adjustedIndex;
-                    //printf("Operation[%d].lst_successeurs[%d] = %d\n", i, indice, op[i].lst_successeurs[indice]);
                 }
                 indice++;
             }
         }
         op[i].lst_successeurs[indice] = 0;
     }
-    //Affichage des successeurs
-    for (int i = 0; i < NB_OPERATIONS; i++) {
+    //Affichage des successeurs - FONCTION TEST
+    /*for (int i = 0; i < NB_OPERATIONS; i++) {
         printf("Operation %d: ", op[i].id);
         for (int j = 0; op[i].lst_successeurs[j] != 0; j++) {
             printf("%d ", op[i].lst_successeurs[j]);
         }
         printf("\n");
-    }
-    printf("+++++++++++++++++++++++++++++++++++++++++++\n");
+    }*/
 }
 
 
 
 int initialisation_successeurs(Operation lst_operations[]) {
+    //Parametres de la fonction:
+    //  lst_operations: tableau contenant toutes les operations
+
+    //Objectif de la fonction:
+    //  Initialiser les successeurs de chaque operation
+    //  On prend en compte les operations manquantes
+
     //Avec le tableau de precedence, nous allons l'inverser.
     //Cela falicitera la recherche de l'operation suivante.
     //Par exemple, si le precendent de 6 est 1, alors dans le nouveau tableau, l'operation 1 contiendra 6 dans son tableau de successeurs.
@@ -114,16 +112,17 @@ int initialisation_successeurs(Operation lst_operations[]) {
     }
 
     //Affichage du tableau de successeurs
-    for (int i = 0; i < NB_OPERATIONS; i++) {
+    /*for (int i = 0; i < NB_OPERATIONS; i++) {
         printf("Operation %d: ", lst_operations[i].id);
         for (int j = 0; j < NB_OPERATIONS; j++) {
             printf("%d ", tableau_successeurs[i][j]);
         }
         printf("\n");
-    }
+    }*/
 
-    matrice_to_array(tableau_successeurs, lst_operations);
+    matrice_to_lst(tableau_successeurs, lst_operations);
 
+    printf("---------------------------------\n");
     printf("Initialisation des successeurs terminee.\n");
 }
 
@@ -133,7 +132,15 @@ int cmpfunc(const void *a, const void *b) {
     return operationA->id - operationB->id;
 }
 
-void mergeOperations(Operation operations[], int *numOperations) {
+void fusion_Operations(Operation operations[], int *numOperations) {
+    //Parametres de la fonction:
+    //  operations: tableau contenant toutes les operations
+    //  numOperations: nombre d'operations
+
+    //Objectif de la fonction:
+    //  Fusionner les operations qui ont le meme identifiant
+    //  On prend en compte les operations manquantes
+
     qsort(operations, *numOperations, sizeof(Operation), cmpfunc);
 
     for (int i = 0; i < *numOperations - 1; i++) {
@@ -153,10 +160,18 @@ void mergeOperations(Operation operations[], int *numOperations) {
             if (operations[i].lst_precedents[j] > NB_OPERATIONS) { operations[i].lst_precedents[j] = 0; }
         }
     }
+    printf("---------------------------------\n");
     printf("Merge des operations terminee.\n");
 }
 
-void readGraphFromFile(Operation operations[], int *numOperations) {
+void lecture_de_fichier(Operation operations[], int *numOperations) {
+    //Parametres de la fonction:
+    //  operations: tableau contenant toutes les operations
+    //  numOperations: nombre d'operations
+
+    //Objectif de la fonction:
+    //  Lire le fichier "graphe.txt" et initialiser les precedents de chaque operation
+
     printf("Lecture du graphe...\n");
     FILE *file = fopen("graphe.txt", "r");
 
@@ -172,18 +187,25 @@ void readGraphFromFile(Operation operations[], int *numOperations) {
         operations[i].statut_complete = 0;
     }
 
-    while (fscanf(file, "%d %d", &operations[*numOperations].lst_precedents[0],
-                  &operations[*numOperations].id) == 2) {
+    while (fscanf(file, "%d %d", &operations[*numOperations].lst_precedents[0], &operations[*numOperations].id) == 2) {
+        //fscanf permet de lire les donnees du fichier et de les stocker dans les variables
+
         if (operations[*numOperations].lst_precedents[0] > NB_OPERATIONS)
+        //Si l'operation n'existe pas, on la met a 0
         { operations[*numOperations].lst_precedents[0] = 0; }
-        // Increment the operation count
+
         (*numOperations)++;
-        //si numOperations est superieur a 0, on realloc lst_precedents
+
         if (*numOperations > 1) {
-            operations[*numOperations - 1].lst_precedents = realloc(operations[*numOperations - 1].lst_precedents,
-                                                                    (*numOperations) * sizeof(int));
+            //si numOperations est superieur a 0, on realloc lst_precedents
+            //On augmente la taille de lst_precedents
+            operations[*numOperations - 1].lst_precedents = realloc(operations[*numOperations - 1].lst_precedents,(*numOperations) * sizeof(int));
         }
         printf("%d ", operations[*numOperations].lst_precedents[0]);
+        //Affichage de lst_precedents
+        for (int i = 0; operations[*numOperations].lst_precedents[i] != 0; i++) {
+            printf("%d ", operations[*numOperations].lst_precedents[i]);
+        }
     }
     fclose(file);
     printf("---------------------------------\n");
