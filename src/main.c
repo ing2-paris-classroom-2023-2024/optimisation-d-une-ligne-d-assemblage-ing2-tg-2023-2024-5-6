@@ -138,15 +138,29 @@ int id_in_pile(int id, int Pile[]) {
     return 0;
 }
 
+// Function to check if all precedents of an operation have statut_complete = 1
+int check_precedents_complete(Operation op[], int id) {
+    int indice = recherche_indice_id(id, op, NB_OPERATIONS);
+    for (int i = 0; op[indice].lst_precedents[i] != 0; i++) {
+        int precedentId = op[indice].lst_precedents[i];
+        int precedentIndice = recherche_indice_id(precedentId, op, NB_OPERATIONS);
+        if (op[precedentIndice].statut_complete != 1) {
+            return 0; // Not all precedents have statut_complete = 1
+        }
+    }
+    return 1; // All precedents have statut_complete = 1
+}
+
 
 void traverse_operations(Operation op[], int startOperation, int numOperation) {
     for (int i = 0; i < numOperation; i++) {
         printf("%d: %d\n", op[i].id, op[i].lst_successeurs[0]);
     }
     printf("----------------------------------TRAVERSE-----------------------------------------\n");
-    //Defintion d'une pile de NB_OPERATIONS lignes
+    // Definition d'une pile de NB_OPERATIONS lignes
     int Pile[NB_OPERATIONS];
     Pile[0] = op[startOperation].id;
+    op[startOperation].statut_complete = 1;
     int i = 0;
     for (int j = 1; j < NB_OPERATIONS; j++) {
         Pile[j] = 0;
@@ -154,58 +168,70 @@ void traverse_operations(Operation op[], int startOperation, int numOperation) {
     printf("Operation de debut: %d\n", Pile[0]);
 
     while (i < NB_OPERATIONS) {
-        //Affichage de la pile
+        // Affichage de la pile
         printf("Pile: ");
-        for (int j = 0; j < NB_OPERATIONS; j++) { printf("%d ", Pile[j]); }
+        for (int j = 0; j < NB_OPERATIONS; j++) {
+            if (Pile[j] != 0) {
+                printf("%d ", Pile[j]);
+            }
+        }
 
-        int lst_sucesseurs[NB_OPERATIONS];
-        lst_sucesseurs[0] = 0;      //Initialisation de la liste des successeurs
+        int lst_successeurs[NB_OPERATIONS];
+        lst_successeurs[0] = 0; // Initialisation de la liste des successeurs
         printf("\n135\n");
 
-        //si id possede un successeur
+        // si id possede un successeur
         int indice = recherche_indice_id(Pile[i], op, numOperation);
         printf("|||Traverse||| i: %d |/| INDICE: %d |/| Operation: %d", i, indice, Pile[i]);
-        recherche_sucesseurs(op, Pile[i], lst_sucesseurs, numOperation);
-        printf("||||LST_SUCCESSEURS[0]: %d\n", lst_sucesseurs[0]);
-        int num_sucessors = 1;
+        recherche_sucesseurs(op, Pile[i], lst_successeurs, numOperation);
+        printf("||||LST_SUCCESSEURS[0]: %d\n", lst_successeurs[0]);
+        int num_successors = 1;
         if (op[indice].lst_successeurs[0] != 0) {
-
             printf("139\n");
-            //recherche_sucesseurs(op, Pile[i], lst_sucesseurs, numOperation);
 
-            while (lst_sucesseurs[0] != 0) {
+            while (lst_successeurs[0] != 0) {
                 printf("139\n");
-                printf("|140||LST_SUCCESSEURS[0]: %d\n", lst_sucesseurs[0]);
-                int id = lst_sucesseurs[0];
+                printf("|140||LST_SUCCESSEURS[0]: %d\n", lst_successeurs[0]);
+                int id = lst_successeurs[0];
                 int j = 0;
-                while (lst_sucesseurs[j] != 0) {
-                    lst_sucesseurs[j] = lst_sucesseurs[j + 1];
+                while (lst_successeurs[j] != 0) {
+                    lst_successeurs[j] = lst_successeurs[j + 1];
                     j++;
                 }
                 printf("145\n");
                 printf("ID: %d\n", id);
                 if (id_in_pile(id, Pile)) {
                     printf("id_in_pile\n");
-                    //Si l'id est dans la pile, on ne fait rien
+                    // Si l'id est dans la pile, on ne fait rien
                     break;
-                }
-                else {
+                } else {
                     printf("id_not_in_pile\n");
-                    //Sinon, on l'ajoute a la pile
-                    //REcherche de l'indice de la pile ou valeur  = 0
-                    int k = 0;
-                    while (Pile[k] != 0) {
-                        k++;
+                    // Sinon, on l'ajoute a la pile si tous les precedents ont statut_complete = 1
+                    if (check_precedents_complete(op, id)) {
+                        // Recherche de l'indice de la pile ou valeur = 0
+                        int k = 0;
+                        while (Pile[k] != 0) {
+                            k++;
+                        }
+                        Pile[k] = id;
+                        // Set statut_complete to 1 for the added operation
+                        int addedOperationIndex = recherche_indice_id(id, op, NB_OPERATIONS);
+                        op[addedOperationIndex].statut_complete = 1;
+                        num_successors++;
+                    } else {
+                        printf("Not all precedents are complete. Skipping...\n");
                     }
-                    Pile[k] = id;
-                    num_sucessors++;
                 }
+
                 printf("165\n");
             }
         }
         i++;
     }
 }
+
+
+
 
 
 

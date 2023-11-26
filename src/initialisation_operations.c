@@ -113,15 +113,6 @@ int initialisation_successeurs(Operation lst_operations[]) {
         }
     }
 
-    /*
-    for (int i = 0; i < NB_OPERATIONS; i++) {
-        for (int j = 0; lst_operations[i].lst_precedents[j] != 0; j++) {
-
-            //Si j est present dans le tableau de precedents de i, alors i est present dans le tableau de successeurs de j
-            tableau_successeurs[lst_operations[i].lst_precedents[j] - 1][i] = 1;
-        }
-    }*/
-
     //Affichage du tableau de successeurs
     for (int i = 0; i < NB_OPERATIONS; i++) {
         printf("Operation %d: ", lst_operations[i].id);
