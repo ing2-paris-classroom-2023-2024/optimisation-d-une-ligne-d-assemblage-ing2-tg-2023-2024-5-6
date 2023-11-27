@@ -2,7 +2,7 @@
 // Created by zheboss on 11/26/2023.
 //
 
-#include "Fonctions_tests.h"
+#include "Fonctions_tests_affichage.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -73,5 +73,39 @@ void affichage_attributs_operations(Operation op[], int numOperation) {
         for (int j = 0; j < NB_OPERATIONS; j++) {
             printf("%d ", op[i].lst_precedents[j]);
         }
+    }
+}
+
+void affichage_pile(int Pile[]) {
+    //Fonction qui affiche la pile
+    printf("Pile: ");
+    for (int j = 0; j < NB_OPERATIONS; j++) {
+        if (Pile[j] != 0) {
+            printf("%d ", Pile[j]);
+        }
+    }
+    printf("\n");
+}
+
+void Affichage_Operations(const Operation operations[], int numOperations) {
+    // Fonction d'affichage des opérations
+    for (int i = 0; i < NB_OPERATIONS-2; i++) {
+        printf("Operation %d: ", i + 1);
+        printf("  Duration: %.2f\n", operations[i].duree);
+        printf("  Status: %d\n", operations[i].statut_complete);
+
+        printf("  Successors: ");
+        for (int j = 0; operations[i].lst_successeurs[j] != 0; j++) {
+            printf(" %d ", operations[i].lst_successeurs[j]);
+        }
+        printf("\n");
+
+
+
+        /*printf("  Precedents: ");
+        for (int j = 0; operations[i].lst_precedents[j] != 0; j++) {
+            printf("%d |", operations[i].lst_precedents[j]);
+        }
+        printf("\n\n");*/
     }
 }

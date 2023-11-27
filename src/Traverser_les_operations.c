@@ -12,6 +12,7 @@
 
 #include <initialisation_operations.h>
 #include <Time_module.h>
+#include <Fonctions_tests_affichage.h>
 
 #include <time.h>
 #include <windows.h>
@@ -84,12 +85,12 @@ int recherche_sucesseurs(Operation op[], int id, int lst_sucesseurs[], int numOp
         }
     }
     //Affichage des successeurs
-    printf("Successeurs de l'operation %d: ", id);
+    /*printf("Successeurs de l'operation %d: ", id);
     for (int i = 0; i < numSuccessors; i++) {
         printf("%d ", lst_sucesseurs[i]);
     }
     printf("\n");
-    printf("================================\n");
+    printf("================================\n");*/
 
 
     return numSuccessors;
@@ -152,12 +153,7 @@ void traverse_operations(Operation op[], int startOperation, int numOperation) {
 
     while (i < NB_OPERATIONS) {
         // Affichage de la pile
-        /*printf("Pile: ");
-        for (int j = 0; j < NB_OPERATIONS; j++) {
-            if (Pile[j] != 0) {
-                printf("%d ", Pile[j]);
-            }
-        }*/
+        //affichage_pile(Pile);
 
         int lst_successeurs[NB_OPERATIONS];
         lst_successeurs[0] = 0; // Initialisation de la liste des successeurs
@@ -165,21 +161,30 @@ void traverse_operations(Operation op[], int startOperation, int numOperation) {
         // si id possede un successeur
         int indice = recherche_indice_id(Pile[i], op, numOperation);
         recherche_sucesseurs(op, Pile[i], lst_successeurs, numOperation);
+        //Mettre a jour le statut_complete de l'operation
+        printf("Operation %d\n", op[indice].id);
+        sleep(15*(unsigned int)op[indice].duree);
+        op[indice].statut_complete = 1;
         int num_successors = 1;
         if (op[indice].lst_successeurs[0] != 0) {
 
-            while (lst_successeurs[0] != 0) {
+            while (lst_successeurs[0] > 0 && lst_successeurs[0] <= NB_OPERATIONS) {
+                //printf("DEBUT TANT QUE:\n");
                 int id = lst_successeurs[0];
                 int j = 0;
+                //printf("premier successeur: %d\n", id);
+                if (id_in_pile(id, Pile)) {
+                    //printf("id_in_pile\n");
+                    //printf("Condition de sortie: %d\n", id);
+                    // Si l'id est dans la pile, on ne fait rien
+                    break;
+                }
                 while (lst_successeurs[j] != 0) {
+                    //printf("lst_successeurs[%d] = %d\n", j, lst_successeurs[j]);
                     lst_successeurs[j] = lst_successeurs[j + 1];
                     j++;
                 }
-                if (id_in_pile(id, Pile)) {
-                    //printf("id_in_pile\n");
-                    // Si l'id est dans la pile, on ne fait rien
-                    break;
-                } else {
+                if (!id_in_pile(id, Pile)) {
                     //printf("id_not_in_pile\n");
                     // Sinon, on l'ajoute a la pile si tous les precedents ont statut_complete = 1
                     if (recherche_precedents(op, id)) {
@@ -189,24 +194,21 @@ void traverse_operations(Operation op[], int startOperation, int numOperation) {
                             k++;
                         }
                         Pile[k] = id;
+                        //printf("Ajout de %d dans la pile\n", id);
                         // Set statut_complete to 1 for the added operation
                         int addedOperationIndex = recherche_indice_id(id, op, NB_OPERATIONS);
-                        op[addedOperationIndex].statut_complete = 1;
+                        //op[addedOperationIndex].statut_complete = 1;
                         num_successors++;
                         //sleep(5*(unsigned int)op[addedOperationIndex].duree);
-                        printf("Pile: ");
-                        for (int j = 0; j < NB_OPERATIONS; j++) {
-                            if (Pile[j] != 0) {
-                                printf("%d ", Pile[j]);
-                            }
-                        }
-                        printf("\n");
                     } /*else {
                         printf("Tout precedents ne sont pas completes\n");
                     }*/
                 }
-
+                //printf("Condition de sortie: %d\n", lst_successeurs[0]);
             }
+            //printf("Condition de sortie2: %d\n", lst_successeurs[0]);
+            //printf("%d\n", lst_successeurs[0] != 0);
+            //printf("FIN TANT QUE\n");
         }
         i++;
     }

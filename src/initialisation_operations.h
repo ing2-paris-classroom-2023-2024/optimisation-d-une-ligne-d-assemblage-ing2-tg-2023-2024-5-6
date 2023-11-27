@@ -11,8 +11,6 @@ int find_missing_operations(Operation op[], int numOperation, int missing[]);
 void matrice_to_lst(int matrice[][NB_OPERATIONS], Operation op[]);
 
 
-void Affichage_Operations(const Operation operations[], int numOperations);
-
 /******************
  * FONCTIONS MERE *
  ******************/

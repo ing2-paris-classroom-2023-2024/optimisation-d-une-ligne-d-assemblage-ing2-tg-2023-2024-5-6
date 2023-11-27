@@ -15,7 +15,7 @@ add_executable(optimisation_d_une_ligne_d_assemblage_ing2_tg_2023_2024_5_6
         src/Time_module.c
         src/Time_module.h
         src/Time_module.c
-        src/Fonctions_tests.c
-        src/Fonctions_tests.h
+        src/Fonctions_tests_affichage.c
+        src/Fonctions_tests_affichage.h
         src/Traverser_les_operations.c
         src/Traverser_les_operations.h)

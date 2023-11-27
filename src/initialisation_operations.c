@@ -212,25 +212,3 @@ void lecture_de_fichier(Operation operations[], int *numOperations) {
     printf("Lecture du graphe terminee.\n");
 }
 
-void Affichage_Operations(const Operation operations[], int numOperations) {
-    // Fonction d'affichage des opérations
-    for (int i = 0; i < NB_OPERATIONS-2; i++) {
-        printf("Operation %d: ", i + 1);
-        printf("  Duration: %.2f\n", operations[i].duree);
-        printf("  Status: %d\n", operations[i].statut_complete);
-
-        printf("  Successors: ");
-        for (int j = 0; operations[i].lst_successeurs[j] != 0; j++) {
-            printf(" %d ", operations[i].lst_successeurs[j]);
-        }
-        printf("\n");
-
-
-
-        /*printf("  Precedents: ");
-        for (int j = 0; operations[i].lst_precedents[j] != 0; j++) {
-            printf("%d |", operations[i].lst_precedents[j]);
-        }
-        printf("\n\n");*/
-    }
-}

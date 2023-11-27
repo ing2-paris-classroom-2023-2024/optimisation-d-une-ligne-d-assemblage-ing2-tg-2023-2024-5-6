@@ -6,7 +6,7 @@
 #include <main.h>
 
 #include <initialisation_operations.h>
-#include <Fonctions_tests.h>
+#include <Fonctions_tests_affichage.h>
 #include <Traverser_les_operations.h>
 #include <Time_module.h>
 
