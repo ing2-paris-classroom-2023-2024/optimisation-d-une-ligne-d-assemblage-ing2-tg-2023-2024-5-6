@@ -36,3 +36,8 @@
 //créer une fonction pour remplir le tableau (station) -> tourne autour fonction qui fait remplissage
 //structure stockage
 //n stations (donc il faut que le nombre de bloc soit en allocation dynamique aussi?)
+
+
+//test alara
+
+
