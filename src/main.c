@@ -1,389 +1,167 @@
-
+#include "main.h"
 #include <stdio.h>
+#include <limits.h>
+#include <stdbool.h>
 #include <stdlib.h>
 
-typedef struct Graphe {
-    int ordre;
-    char** noms_sommets;
-} Graphe;
+// Lecture du fichier.txt
+/*void lecture_fichier() {
+    FILE* fichier = fopen("graphe.txt", "r");
+    char mot[100];
 
-
-#include <stdio.h>
-#include <stdlib.h>
-
-typedef struct Graphe {
-    int ordre;
-    char** noms_sommets;
-} Graphe;
-
-Graphe* CreerGraphe(int ordre) {
-    Graphe* Newgraphe = (Graphe*)malloc(sizeof(Graphe));
-    Newgraphe->ordre = ordre;
-    Newgraphe->noms_sommets = (char**)malloc(ordre * sizeof(char*));
-
-    for (int i = 0; i < ordre; i++) {
-        Newgraphe->noms_sommets[i] = (char*)malloc(2 * sizeof(char)); // Assuming two-character names
-        // Initialise les noms des sommets à des chaînes vides
-        Newgraphe->noms_sommets[i][0] = '\0';
-        Newgraphe->noms_sommets[i][1] = '\0';
+    if (fichier != NULL) {
+        while (fscanf(fichier, "%s", mot) != EOF) {
+            printf("%s\n", mot);
+        }
+        fclose(fichier);
     }
+}*/
+// Lecture du fichier.txt et extraction de min et max
+int lecture_fichier(int* min, int* max) {
+    FILE* fichier = fopen("graphe.txt", "r");
+    int nombre;
 
-    // Allocation de la mémoire pour la matrice des capacités des arcs
-    Newgraphe->capacites_arcs = (int**)malloc(ordre * sizeof(int*));
-    for (int i = 0; i < ordre; i++) {
-        Newgraphe->capacites_arcs[i] = (int*)malloc(ordre * sizeof(int));
+    if (fichier != NULL) {
+        *min = INT_MAX;
+        *max = INT_MIN;
+
+        while (fscanf(fichier, "%d", &nombre) != EOF) {
+            // Met à jour la valeur minimale si nécessaire
+            if (nombre < *min) {
+                *min = nombre;
+            }
+
+            // Met à jour la valeur maximale si nécessaire
+            if (nombre > *max) {
+                *max = nombre;
+            }
+        }
+
+        fclose(fichier);
+
+        // Vérifie si des valeurs ont été lues du fichier
+        if (*min == INT_MAX && *max == INT_MIN) {
+            fprintf(stderr, "Le fichier est vide ou ne contient pas de valeurs entières.\n");
+            return 1; // Retourne une valeur d'erreur
+        } else {
+            return 0; // Retourne 0 en cas de succès
+        }
+    } else {
+        fprintf(stderr, "Erreur lors de l'ouverture du fichier.\n");
+        return 1; // Retourne une valeur d'erreur
     }
-
-    return Newgraphe;
 }
 
-// Fonction pour lire le fichier et appeler les fonctions CreeArete
-// et CreerGraphe afin de transposer le graphe du fichier en structure de données
-Graphe* lire_graphe(const char* nom_fichier) {
-    FILE* ifs = fopen(nom_fichier, "r");
-    if (!ifs) {
-        printf("\n\n#### ERREUR ####\nFichier '%s' non trouvé, est-il bien dans le dossier du projet ?\n", nom_fichier);
-        exit(EXIT_FAILURE);
+// Détermine le minimum et le maximum dans un ensemble de nombres à partir d'un fichier.
+void echelle() {
+    FILE* fichier = fopen("graphe.txt", "r");
+
+    if (fichier == NULL) {
+        fprintf(stderr, "Erreur lors de l'ouverture du fichier.\n");
+        return;
     }
 
-    int ordre;
-    fscanf(ifs, "%d", &ordre);
-    Graphe* graphe = CreerGraphe(ordre);
+    int min = INT_MAX;
+    int max = INT_MIN;
+    int nombre = 0;
 
-    // Lecture des noms des sommets
-    for (int i = 0; i < ordre; ++i) {
-        fscanf(ifs, "%s", graphe->noms_sommets[i]);
-    }
+    while (fscanf(fichier, "%d", &nombre) == 1) {
+        if (nombre < min) {
+            min = nombre;
+        }
 
-    // Lecture des capacités des arcs
-    for (int i = 0; i < ordre; i++) {
-        for (int j = 0; j < ordre; j++) {
-            fscanf(ifs, "%d", &graphe->capacites_arcs[i][j]);
+        if (nombre > max) {
+            max = nombre;
         }
     }
 
-    fclose(ifs);
-    return graphe;
-}
+    fclose(fichier);
 
-void afficher_graphe(Graphe* graphe) {
-    printf("### AFFICHAGE DU GRAPHE ###\nOrdre du graphe: %d\n", graphe->ordre);
-
-    printf("Liste des sommets:\n");
-    for (int i = 0; i < graphe->ordre; i++) {
-        printf("%s\n", graphe->noms_sommets[i]);
-    }
-
-    printf("#############################################\n\n");
-}
-
-void colorer_graphe(Graphe* graphe, int* coloration) {
-    for (int i = 0; i < graphe->ordre; i++) {
-        coloration[i] = i; // Attribution de couleurs indépendamment de la connectivité
+    if (min == INT_MAX && max == INT_MIN) {
+        printf("Le fichier est vide ou ne contient pas de valeurs entières.\n");
+    } else {
+        printf("Valeur minimale : %d\n", min);
+        printf("Valeur maximale : %d\n", max);
     }
 }
 
-int main() {
-    char nom_fichier[100];
-    printf("Veuillez entrer le nom du fichier : ");
-    scanf("%99s", nom_fichier);
-
-    Graphe* g = lire_graphe(nom_fichier);
-    afficher_graphe(g);
-
-    int* coloration = (int*)malloc(g->ordre * sizeof(int));
-
-    colorer_graphe(g, coloration);
-
-    printf("### COULEURS ATTRIBUÉES AUX SOMMETS ###\n");
-    for (int i = 0; i < g->ordre; i++) {
-        printf("Sommet %s : Couleur %d\n", g->noms_sommets[i], coloration[i]);
+// Crée un bloc avec tous les éléments du min au max.
+void CreationBloc(int min, int max, int bloc[]) {
+    for (int i = 0; i < max - min + 1; i++) {
+        bloc[i] = min + i;
     }
-
-    // Libérer la mémoire
-    for (int i = 0; i < g->ordre; i++) {
-        free(g->noms_sommets[i]);
-    }
-    free(g->noms_sommets);
-    free(g);
-    free(coloration);
-
-    return 0;
 }
-//test 3
 
-
-// Fonction pour lire le fichier et appeler les fonctions CreeArete
-// et CreerGraphe afin de transposer le graphe du fichier en structure de données
-Graphe* lire_graphe(const char* nom_fichier) {
-    FILE* ifs = fopen(nom_fichier, "r");
-    if (!ifs) {
-        printf("\n\n#### ERREUR ####\nFichier '%s' non trouvé, est-il bien dans le dossier du projet ?\n", nom_fichier);
-        exit(EXIT_FAILURE);
+// Place les éléments dans le bloc en fonction des contraintes.
+void PlaceElements(int min, int max, int blocA[], int n) {
+    int* blocB = malloc(n * sizeof(int));
+    if (blocB == NULL) {
+        fprintf(stderr, "Erreur d'allocation mémoire.\n");
+        return;
     }
 
-    int ordre;
-    fscanf(ifs, "%d", &ordre);
-    Graphe* graphe = CreerGraphe(ordre);
+    int indexA = 0;
+    int indexB = 0;
+    bool contrainte = false;
 
-    // Lecture des noms des sommets
-    for (int i = 0; i < ordre; ++i) {
-        fscanf(ifs, "%s", graphe->noms_sommets[i]);
-    }
+    for (int i = 0; i < n; i++) {
+        contrainte = false;
 
-    // Lecture des capacités des arcs
-    for (int i = 0; i < ordre; i++) {
-        for (int j = 0; j < ordre; j++) {
-            fscanf(ifs, "%d", &graphe->capacites_arcs[i][j]);
+        if (i > 0 && blocA[indexA + i - 1] == i + min - 1) {
+            contrainte = true;
+        }
+
+        if (contrainte) {
+            blocB[indexB] = i + min;
+            indexB++;
+        } else {
+            blocA[indexA] = i + min;
+            indexA++;
         }
     }
 
-    fclose(ifs);
-    return graphe;
-}
-
-void afficher_graphe(Graphe* graphe) {
-    printf("### AFFICHAGE DU GRAPHE ###\nOrdre du graphe: %d\n", graphe->ordre);
-
-    printf("Liste des sommets:\n");
-    for (int i = 0; i < graphe->ordre; i++) {
-        printf("%s\n", graphe->noms_sommets[i]);
+    // Affiche le contenu des blocs
+    printf("Bloc A : ");
+    for (int i = 0; i < indexA; i++) {
+        printf("%d ", blocA[i]);
     }
-
-    printf("#############################################\n\n");
-}
-
-void colorer_graphe(Graphe* graphe, int* coloration) {
-    for (int i = 0; i < graphe->ordre; i++) {
-        coloration[i] = i; // Attribution de couleurs indépendamment de la connectivité
-    }
-}
-
-int main() {
-    char nom_fichier[100];
-    printf("Veuillez entrer le nom du fichier : ");
-    scanf("%99s", nom_fichier);
-
-    Graphe* g = lire_graphe(nom_fichier);
-    afficher_graphe(g);
-
-    int* coloration = (int*)malloc(g->ordre * sizeof(int));
-
-    colorer_graphe(g, coloration);
-
-    printf("### COULEURS ATTRIBUÉES AUX SOMMETS ###\n");
-    for (int i = 0; i < g->ordre; i++) {
-        printf("Sommet %s : Couleur %d\n", g->noms_sommets[i], coloration[i]);
-    }
-
-    // Libérer la mémoire
-    for (int i = 0; i < g->ordre; i++) {
-        free(g->noms_sommets[i]);
-    }
-    free(g->noms_sommets);
-    free(g);
-    free(coloration);
-
-    return 0;
-}
-
-
-
-
-/*
-// Fichier Header
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-// Structure definition
-typedef struct Graphe {
-    int ordre;
-    char** noms_sommets;
-    int** capacites_arcs;
-    int** capacites_restantes;
-    int** flots;
-} Graphe;
-
-// Fonction pour allouer un graphe et ses attributs dynaniquement
-Graphe* CreerGraphe(int ordre) {
-    Graphe* Newgraphe = (Graphe*)malloc(sizeof(Graphe));
-    Newgraphe->ordre = ordre;
-    Newgraphe->noms_sommets = (char**)malloc(ordre * sizeof(char*));
-    Newgraphe->capacites_arcs = (int**)malloc(ordre * sizeof(int*));
-    Newgraphe->capacites_restantes = (int**)malloc(ordre * sizeof(int*));
-    Newgraphe->flots = (int**)malloc(ordre * sizeof(int*));
-
-    // Remplir la matrice avec des 0
-    for (int i = 0; i < ordre; i++) {
-        Newgraphe->noms_sommets[i] = (char*)malloc(2 * sizeof(char)); // Assuming two-character names
-        Newgraphe->capacites_arcs[i] = (int*)calloc(ordre, sizeof(int));
-        Newgraphe->capacites_restantes[i] = (int*)calloc(ordre, sizeof(int));
-        Newgraphe->flots[i] = (int*)calloc(ordre, sizeof(int));
-    }
-    return Newgraphe;
-}
-
-// Fonction pour lire le fichier et appeler les fonctions CreeArete
-// et CreerGraphe afin de transposer le graphe du fichier en structure de données
-Graphe* lire_graphe(const char* nom_fichier) {
-    FILE* ifs = fopen(nom_fichier, "r");
-    if (!ifs) {
-        printf("\n\n#### ERREUR ####\nFichier '%s' non trouvé, est-il bien dans le dossier du projet ?\n", nom_fichier);
-        exit(EXIT_FAILURE);
-    }
-
-    int ordre;
-    fscanf(ifs, "%d", &ordre);
-    Graphe* graphe = CreerGraphe(ordre);
-
-    for (int i = 0; i < ordre; ++i) {
-        fscanf(ifs, "%s", graphe->noms_sommets[i]);
-    }
-
-    for (int i = 0; i < ordre; i++) {
-        for (int j = 0; j < ordre; j++) {
-            fscanf(ifs, "%d", &graphe->capacites_arcs[i][j]);
-        }
-    }
-
-    for (int i = 0; i < ordre; i++) {
-        for (int j = 0; j < ordre; j++) {
-            graphe->capacites_restantes[i][j] = graphe->capacites_arcs[i][j];
-        }
-    }
-
-    fclose(ifs);
-    return graphe;
-}
-
-// Fonction pour afficher le graphe
-void afficher_graphe(Graphe* graphe) {
-    printf("### AFFICHAGE DU GRAPHE ###\nOrdre du graphe: %d\n", graphe->ordre);
-
-    // Display capacities of arcs in a square matrix
-    printf("Capacités des arcs:\n");
-    for (int i = 0; i < graphe->ordre; i++) {
-        printf("%s | ", graphe->noms_sommets[i]);
-        for (int j = 0; j < graphe->ordre; j++) {
-            printf("%d ", graphe->capacites_arcs[i][j]);
-        }
-        printf("\n");
-    }
-
     printf("\n");
 
-    // Afficher la liste des arcs avec leurs capacités sous la forme :
-    printf("Liste des arcs avec leurs capa:\n");
-    for (int i = 0; i < graphe->ordre; i++) {
-        for (int j = 0; j < graphe->ordre; j++) {
-            if (graphe->capacites_arcs[i][j] != 0) {
-                printf("%s -> %s |%d|  ", graphe->noms_sommets[i], graphe->noms_sommets[j], graphe->capacites_arcs[i][j]);
-            }
-        }
-        (i == graphe->ordre - 1) ? printf("") : printf("\n");
+    printf("Bloc B : ");
+    for (int i = 0; i < indexB; i++) {
+        printf("%d ", blocB[i]);
     }
+    printf("\n");
 
-    printf("#############################################\n\n");
-}
-
-// FONCTION POUR COLORER LE GRAPHE
-// Fonction pour initialiser les couleurs
-void initialiser_couleurs(int* coloration, int nombre_sommets)
-{
-    for (int i = 0; i < nombre_sommets; i++)
-    {
-        coloration[i] = -1; // -1 signifie que le sommet n'est pas coloré
-    }
-}
-
-// Fonction pour colorer le graphe
-void colorer_graphe(Graphe* graphe, int* coloration, int sommet, int nombre_couleurs)
-{
-    initialiser_couleurs(coloration, graphe->ordre);
-
-    // Coloration du sommet de départ
-    coloration[sommet] = 0;
-
-    // Coloration des autres sommets
-    for (int i = 0; i < graphe->ordre; i++)
-    {
-        if (graphe->capacites_arcs[sommet][i] != 0)
-        {
-            coloration[i] = 1;
-        }
-    }
-
-    // Coloration des sommets restants
-    for (int i = 0; i < graphe->ordre; i++)
-    {
-        if (coloration[i] == -1)
-        {
-            int couleur_disponible[graphe->ordre]; // Tableau pour stocker les couleurs disponibles
-            for (int j = 0; j < graphe->ordre; j++)
-            {
-                couleur_disponible[j] = 1; // 1 signifie que la couleur est disponible
-            }
-
-            // Parcourir les sommets adjacents et marquer les couleurs indisponibles
-            for (int j = 0; j < graphe->ordre; j++)
-            {
-                if (graphe->capacites_arcs[i][j] != 0 && coloration[j] != -1)
-                {
-                    couleur_disponible[coloration[j]] = 0; // 0 signifie que la couleur n'est pas disponible
-                }
-            }
-
-            // Trouver la première couleur disponible
-            for (int j = 0; j < graphe->ordre; j++)
-            {
-                if (couleur_disponible[j] == 1)
-                {
-                    coloration[i] = j;
-                    break;
-                }
-            }
-        }
-    }
+    free(blocB); // Libère la mémoire allouée dynamiquement
 }
 
 int main() {
-    char nom_fichier[100];  // Déclare un tableau de caractères pour stocker le nom du fichier
-    printf("Veuillez entrer le nom du fichier : ");
-    scanf("%99s", nom_fichier);  // Utilisez %99s pour éviter un dépassement de tampon
+    int min, max;
+    int* blocA;
 
-    Graphe* g = lire_graphe(nom_fichier);
-    afficher_graphe(g);
-
-    // Allocation dynamique de la mémoire pour la coloration
-    int* coloration = (int*)malloc(g->ordre * sizeof(int));
-
-    // Appliquer la coloration
-    colorer_graphe(g, coloration, 0, g->ordre);  // Vous pouvez choisir un sommet initial (ici, le premier sommet, d'où le 0)
-
-    // Afficher les couleurs attribuées aux sommets
-    for (int i = 0; i < g->ordre; i++)
-    {
-        printf("Sommet %d : Couleur %d\n", i, coloration[i]);
+    // Appeler la fonction lecture_fichier pour obtenir min et max
+    if (lecture_fichier(&min, &max) != 0) {
+        // Gérer l'erreur si la lecture du fichier échoue
+        return 1;
     }
 
-    // Libérer la mémoire
-    for (int i = 0; i < g->ordre; i++) {
-        free(g->noms_sommets[i]);
-        free(g->capacites_arcs[i]);
-        free(g->capacites_restantes[i]);
-        free(g->flots[i]);
+    printf("Min : %d\n", min);
+    printf("Max : %d\n", max);
+
+    int n = max - min + 1;
+
+    blocA = malloc(n * sizeof(int));
+    if (blocA == NULL) {
+        fprintf(stderr, "Erreur d'allocation mémoire.\n");
+        return 1;
     }
-    free(g->noms_sommets);
-    free(g->capacites_arcs);
-    free(g->capacites_restantes);
-    free(g->flots);
-    free(g);
-    free(coloration);
+
+    CreationBloc(min, max, blocA);
+    PlaceElements(min, max, blocA, n);
+
+    // Libération de la mémoire
+    free(blocA);
 
     return 0;
 }
-
-*/
-
-
