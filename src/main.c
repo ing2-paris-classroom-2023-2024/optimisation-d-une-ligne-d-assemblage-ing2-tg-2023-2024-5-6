@@ -38,6 +38,5 @@
 //n stations (donc il faut que le nombre de bloc soit en allocation dynamique aussi?)
 
 
-//tests alara
-
+//TEST
 
