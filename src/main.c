@@ -5,7 +5,7 @@
 #include "src/main.h"
 #include <stdio.h>
 
-
+//12
 //commentaires pour expliquer ce qu'on pourrait faire pour contrainte d'exclusion 
 
 //lecture du fichier.txt
