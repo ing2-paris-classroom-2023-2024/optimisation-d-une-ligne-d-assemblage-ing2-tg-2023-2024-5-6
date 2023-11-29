@@ -2,8 +2,6 @@
  * Sources :
 */
 
-#include "src/main.h"
-#include <stdio.h>
 
 //1234
 //commentaires pour expliquer ce qu'on pourrait faire pour contrainte d'exclusion 
@@ -38,5 +36,79 @@
 //n stations (donc il faut que le nombre de bloc soit en allocation dynamique aussi?)
 
 
-//TEST
+#include <stdio.h>
+#include <stdlib.h>
+#include <limits.h>
 
+// Lecture de fichier + Placement des éléments dans un tableau
+void lire_fichier(char* nom_fichier, int tableau[100][100], int *N)
+{
+    FILE* fichier = fopen(nom_fichier, "r");
+
+    if (!fichier)
+    {
+        printf("\n\n#### ERREUR ####\nFichier '%s' non trouvé, est-il bien dans le dossier du projet ?\n", nom_fichier);
+        exit(EXIT_FAILURE);
+    }
+
+    int i = 0, j = 0;
+    while (fscanf(fichier, "%d", &tableau[i][j]) != EOF)
+    {
+        i++;
+        j++;
+    }
+
+    *N = i; // La taille du tableau est maintenant dans N
+
+    fclose(fichier);
+}
+
+// Fonction pour trouver le minimum et le maximum d'un tableau
+void Trouver_Min_Max(int tableau[100][100], int N)
+{
+    int i, j;
+
+    // Variable pour stocker le minimum et le maximum
+    int minV = INT_MAX, maxV = INT_MIN;
+
+    // Parcours du tableau
+    for (i = 0; i < N; i++)
+    {
+        for (j = 0; j < N; j++)
+        {
+            // Si l'élément actuel est plus petit que le minimum
+            if (tableau[i][j] < minV)
+            {
+                minV = tableau[i][j];
+            }
+
+            // Si l'élément actuel est plus grand que le maximum
+            if (tableau[i][j] > maxV)
+            {
+                maxV = tableau[i][j];
+            }
+        }
+    }
+
+    // Affichage du minimum et du maximum
+    printf("Le minimum est : %d\n", minV);
+    printf("Le maximum est : %d\n", maxV);
+}
+
+int main()
+{
+    char nom_fichier[100];
+    int tableau[100][100];
+    int N;
+
+    printf("Quel fichier voulez-vous lire ?\n");
+    scanf("%99s", nom_fichier);
+
+    lire_fichier(nom_fichier, tableau, &N);
+    Trouver_Min_Max(tableau, N);
+
+    return 0;
+}
+
+//prochaine étape créer un bloc 1 (le premier) qui va du min au max
+//faire en sorte que le tableau(?) soit en allocation dynamique
