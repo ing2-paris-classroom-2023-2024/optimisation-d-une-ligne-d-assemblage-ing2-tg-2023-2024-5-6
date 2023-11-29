@@ -41,7 +41,7 @@
 #include <limits.h>
 
 // Lecture de fichier + Placement des éléments dans un tableau
-void lire_fichier(char* nom_fichier, int tableau[100][100], int *N)
+void lire_fichier(char* nom_fichier, int MinMax[100][100], int *N)
 {
     FILE* fichier = fopen(nom_fichier, "r");
 
@@ -52,10 +52,10 @@ void lire_fichier(char* nom_fichier, int tableau[100][100], int *N)
     }
 
     int i = 0, j = 0;
-    while (fscanf(fichier, "%d", &tableau[i][j]) != EOF)
+    while (fscanf(fichier, "%d", &MinMax[i][j]) != EOF)
     {
-        i++;
-        j++;
+        i++; //représente la première colonne
+        j++; //représente la deuxième colonne
     }
 
     *N = i; // La taille du tableau est maintenant dans N
@@ -63,8 +63,11 @@ void lire_fichier(char* nom_fichier, int tableau[100][100], int *N)
     fclose(fichier);
 }
 
-// Fonction pour trouver le minimum et le maximum d'un tableau
-void Trouver_Min_Max(int tableau[100][100], int N)
+//Le but de la fonction est de trouver le minimum et le maximum du fichier.txt
+//On obtient le minimum ainsi que le maximum en comparant chaque valeur entre les deux colonnes (i et j)
+//cette fonction permet à ce qu'on puisse crée par la suite un premier bloc (Bloc1) (où on mettra tous les éléments compris entre le min et max)
+
+void Trouver_Min_Max(int MinMax[100][100], int N) //maximum 100 valeurs pour les deux colonnes
 {
     int i, j;
 
@@ -77,20 +80,20 @@ void Trouver_Min_Max(int tableau[100][100], int N)
         for (j = 0; j < N; j++)
         {
             // Si l'élément actuel est plus petit que le minimum
-            if (tableau[i][j] < minV)
+            if (MinMax[i][j] < minV)
             {
-                minV = tableau[i][j];
+                minV = MinMax[i][j]; //coquille?
             }
 
             // Si l'élément actuel est plus grand que le maximum
-            if (tableau[i][j] > maxV)
+            if (MinMax[i][j] > maxV)
             {
-                maxV = tableau[i][j];
+                maxV = MinMax[i][j];
             }
         }
     }
 
-    // Affichage du minimum et du maximum
+    //Debug min max
     printf("Le minimum est : %d\n", minV);
     printf("Le maximum est : %d\n", maxV);
 }
