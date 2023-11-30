@@ -41,6 +41,9 @@
 #include <stdlib.h>
 #include <limits.h>
 
+
+
+
 // Lecture de fichier + Placement des éléments dans un tableau
 void lire_fichier(char* nom_fichier, int tableau[100], int* N)
 {
@@ -67,24 +70,24 @@ void lire_fichier(char* nom_fichier, int tableau[100], int* N)
 //On obtient le minimum ainsi que le maximum en comparant chaque valeur entre les deux colonnes (i et j)
 //cette fonction permet à ce qu'on puisse crée par la suite un premier bloc (Bloc1) (où on mettra tous les éléments compris entre le min et max)
 
-void Trouver_Min_Max(int tableau[100], int N)
+void Trouver_Min_Max(int tableau[100], int N, int* minV1, int* maxV1)
 {
     int i;
 
     // Variable pour stocker le minimum et le maximum
-    int minV1 = INT_MAX;
-    int maxV1 = INT_MIN;
+    *minV1 = INT_MAX;
+    *maxV1 = INT_MIN;
 
     for (i = 0; i< N; i++){
-        if (tableau[i]<minV1){
-            minV1 = tableau[i];
+        if (tableau[i]< *minV1){
+            *minV1 = tableau[i];
         }
-        if (tableau[i] > maxV1){
-            maxV1 = tableau[i];
+        if (tableau[i] > *maxV1){
+            *maxV1 = tableau[i];
         }
     }
-    printf("minimum pour colonne 1 : %d\n", minV1);
-    printf("maximum pour colonne1 : %d\n", maxV1);
+    printf("minimum pour colonne 1 : %d\n", *minV1);
+    printf("maximum pour colonne1 : %d\n", *maxV1);
 
 
     }
@@ -102,10 +105,12 @@ void Afficher_Tableau (int tableau[100], int N) //DEBUG
     printf("\n");
 }
 
- int contraintes (int tableau[100], int N){
+
+
+void contraintes (int tableau[100], int N, int* pair, int* impair){
     int paire_contraintes;
-    int pair;
-    int impair;
+    //int pair;
+    //int impair;
 
     for (int i = -1; i< N-1; i++){
 
@@ -116,18 +121,15 @@ void Afficher_Tableau (int tableau[100], int N) //DEBUG
 
 
         if (paire_contraintes%2 == 0){
-            pair = tableau[paire_contraintes];
-            printf("voici la paire contrainte %d ", pair);
+            *pair = tableau[paire_contraintes];
+            printf("voici la paire contrainte %d ", *pair);
         }
 
         if (paire_contraintes%2 != 0){
-            impair = tableau[paire_contraintes];
-            printf("%d\n", impair);
-            //printf("Voici la paire contrainte: %d %d\n", tableau[paire_contraintes], tableau[paire_contraintes--]);
+            *impair = tableau[paire_contraintes];
+            printf("%d\n", *impair);
         }
-
     }
-    return paire_contraintes;
 }
 
 int main()
@@ -135,18 +137,19 @@ int main()
     char nom_fichier[100];
     int tableau[100];
     int N;
+    int pair, impair;
+    int minV1, maxV1;
 
     printf("Quel fichier voulez-vous lire ?\n");
     scanf("%99s", nom_fichier);
 
     lire_fichier(nom_fichier, tableau, &N);
 
-   // Afficher_Tableau(tableau, N);
-    contraintes(tableau, N);
-    Trouver_Min_Max(tableau, N);
+   // Afficher_Tableau(tableau, N); // DEBUG
+    contraintes(tableau, N, &pair, &impair);
+    Trouver_Min_Max(tableau, N, &minV1, &maxV1);
 
     return 0;
 }
-//prochaine étape créer un bloc 1 (le premier) qui va du min au max
-//faire en sorte que le tableau(?) soit en allocation dynamique
+
 //*/
