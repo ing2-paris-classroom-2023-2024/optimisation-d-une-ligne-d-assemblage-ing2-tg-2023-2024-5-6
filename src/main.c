@@ -64,7 +64,12 @@ void lire_fichier(char* nom_fichier, int tableau[100], int* N)
     *N = i; // La taille du tableau est maintenant dans N
 
     fclose(fichier);
-}
+
+
+    /////Partie allocation dynamique du tableau
+    //if (N>0){
+    //    N = malloc(N * sizeof(*N));
+  }
 
 //Le but de la fonction est de trouver le minimum et le maximum du fichier.txt
 //On obtient le minimum ainsi que le maximum en comparant chaque valeur entre les deux colonnes (i et j)
@@ -132,6 +137,26 @@ void contraintes (int tableau[100], int N, int* pair, int* impair){
     }
 }
 
+void Bloc_Initial(int minV1, int maxV1)
+{
+    int bloc1[100];
+    int j = 0;
+
+    for (int i = minV1; i <= maxV1; i++)
+    {
+        bloc1[j] = i;
+        j++;
+    }
+
+    // Affichez le bloc1 après la construction
+    printf("Voici le bloc initial : ");
+    for (int k = 0; k < j; k++)
+    {
+        printf("%d ", bloc1[k]);
+    }
+    printf("\n");
+
+}
 int main()
 {
     char nom_fichier[100];
@@ -148,6 +173,7 @@ int main()
    // Afficher_Tableau(tableau, N); // DEBUG
     contraintes(tableau, N, &pair, &impair);
     Trouver_Min_Max(tableau, N, &minV1, &maxV1);
+    Bloc_Initial(minV1, maxV1);
 
     return 0;
 }
