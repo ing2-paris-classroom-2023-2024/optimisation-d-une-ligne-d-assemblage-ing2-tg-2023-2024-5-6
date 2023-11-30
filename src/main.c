@@ -29,6 +29,8 @@ int main() {
 
     //Affichage_Operations(operations, numOperations);
 
+
+    // Call the traverse_operations function
     traverse_operations(operations, 0, numOperations);
 
     //gestion_precedence(operations);
