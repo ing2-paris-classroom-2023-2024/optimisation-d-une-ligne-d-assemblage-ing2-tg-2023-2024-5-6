@@ -1,5 +1,6 @@
 /* Fichier Main du projet TG 2023-2024
  * Sources :
+
 */
 
 
@@ -67,6 +68,8 @@ void lire_fichier(char* nom_fichier, int tableau[100], int* N)
 
 
     /////Partie allocation dynamique du tableau
+    //http://sdz.tdct.org/sdz/ableaux-pointeurs-et-allocation-dynamique.html
+
     //if (N>0){
     //    N = malloc(N * sizeof(*N));
   }
@@ -167,6 +170,7 @@ int main()
 
     printf("Quel fichier voulez-vous lire ?\n");
     scanf("%99s", nom_fichier);
+    //https://stackoverflow.com/questions/44670035/how-to-clone-99s-in-fscanffile-d-99s-id-name-2
 
     lire_fichier(nom_fichier, tableau, &N);
 
