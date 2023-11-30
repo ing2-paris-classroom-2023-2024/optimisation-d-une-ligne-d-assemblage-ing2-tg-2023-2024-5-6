@@ -35,15 +35,14 @@
 //structure stockage
 //n stations (donc il faut que le nombre de bloc soit en allocation dynamique aussi?)
 
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <limits.h>
 
 // Lecture de fichier + Placement des éléments dans un tableau
-void lire_fichier(char* nom_fichier, int MinMax[100][100], int *N)
+void lire_fichier(char* nom_fichier, int tableau[100], int* N)
 {
-    FILE* fichier = fopen(nom_fichier, "r");
+    FILE *fichier = fopen(nom_fichier, "r");
 
     if (!fichier)
     {
@@ -51,11 +50,10 @@ void lire_fichier(char* nom_fichier, int MinMax[100][100], int *N)
         exit(EXIT_FAILURE);
     }
 
-    int i = 0, j = 0;
-    while (fscanf(fichier, "%d", &MinMax[i][j]) != EOF)
+    int i = 0;
+    while (fscanf(fichier, "%d", &tableau[i]) != EOF)
     {
-        i++; //représente la première colonne
-        j++; //représente la deuxième colonne
+        i++;
     }
 
     *N = i; // La taille du tableau est maintenant dans N
@@ -67,51 +65,59 @@ void lire_fichier(char* nom_fichier, int MinMax[100][100], int *N)
 //On obtient le minimum ainsi que le maximum en comparant chaque valeur entre les deux colonnes (i et j)
 //cette fonction permet à ce qu'on puisse crée par la suite un premier bloc (Bloc1) (où on mettra tous les éléments compris entre le min et max)
 
-void Trouver_Min_Max(int MinMax[100][100], int N) //maximum 100 valeurs pour les deux colonnes
+void Trouver_Min_Max(int tableau[100], int N)
 {
-    int i, j;
+    int i;
 
     // Variable pour stocker le minimum et le maximum
-    int minV = INT_MAX, maxV = INT_MIN;
+    int minV1 = INT_MAX;
+    int maxV1 = INT_MIN;
+
+    for (i = 0; i< N; i++){
+        if (tableau[i]<minV1){
+            minV1 = tableau[i];
+        }
+        if (tableau[i] > maxV1){
+            maxV1 = tableau[i];
+        }
+    }
+    printf("minimum pour colonne 1 : %d\n", minV1);
+    printf("maximum pour colonne1 : %d\n", maxV1);
+
+
+    }
+
+
+void Afficher_Tableau (int tableau[100], int N) //DEBUG
+{
+    int i;
 
     // Parcours du tableau
     for (i = 0; i < N; i++)
     {
-        for (j = 0; j < N; j++)
-        {
-            // Si l'élément actuel est plus petit que le minimum
-            if (MinMax[i][j] < minV)
-            {
-                minV = MinMax[i][j]; //coquille?
-            }
+        printf("%d ", tableau[i]);
 
-            // Si l'élément actuel est plus grand que le maximum
-            if (MinMax[i][j] > maxV)
-            {
-                maxV = MinMax[i][j];
-            }
-        }
     }
+    printf("\n");
 
-    //Debug min max
-    printf("Le minimum est : %d\n", minV);
-    printf("Le maximum est : %d\n", maxV);
 }
 
 int main()
 {
     char nom_fichier[100];
-    int tableau[100][100];
+    int tableau[100];
     int N;
 
     printf("Quel fichier voulez-vous lire ?\n");
     scanf("%99s", nom_fichier);
 
     lire_fichier(nom_fichier, tableau, &N);
+
+    Afficher_Tableau(tableau, N);
+
     Trouver_Min_Max(tableau, N);
 
     return 0;
 }
-
 //prochaine étape créer un bloc 1 (le premier) qui va du min au max
 //faire en sorte que le tableau(?) soit en allocation dynamique
