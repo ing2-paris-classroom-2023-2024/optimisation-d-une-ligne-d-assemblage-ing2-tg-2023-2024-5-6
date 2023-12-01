@@ -126,7 +126,7 @@ void Filtrage(int exclusion[TAILLE_MAX][2], int nbContraintes, int blocInitial[T
 
     for (int i = 0; i < tailleBloc; i++) // On parcourt le bloc initial
     {
-        int operationCourante = blocInitial[i]; // On récupère l'opération courante
+        int operationCourante = blocInitial[i]; // On récupère les données du bloc initial
         bool peutEtreAjoute = true; // On suppose que l'opération peut être ajoutée
 
         for (int k = 0; k < nbContraintes; k++) // On utilise k pour parcourir les contraintes
