@@ -43,10 +43,12 @@
 #include <limits.h>
 
 
+#define TAILLE_MAX 1000
+
 
 
 // Lecture de fichier + Placement des éléments dans un tableau
-void lire_fichier(char* nom_fichier, int tableau[100], int* N)
+void lire_fichier(char* nom_fichier, int tableau[TAILLE_MAX], int* N)
 {
     FILE *fichier = fopen(nom_fichier, "r");
 
@@ -78,7 +80,7 @@ void lire_fichier(char* nom_fichier, int tableau[100], int* N)
 //On obtient le minimum ainsi que le maximum en comparant chaque valeur entre les deux colonnes (i et j)
 //cette fonction permet à ce qu'on puisse crée par la suite un premier bloc (Bloc1) (où on mettra tous les éléments compris entre le min et max)
 
-void Trouver_Min_Max(int tableau[100], int N, int* minV1, int* maxV1)
+void Trouver_Min_Max(int tableau[TAILLE_MAX], int N, int* minV1, int* maxV1)
 {
     int i;
 
@@ -101,7 +103,7 @@ void Trouver_Min_Max(int tableau[100], int N, int* minV1, int* maxV1)
     }
 
 
-void Afficher_Tableau (int tableau[100], int N) //DEBUG
+void Afficher_Tableau (int tableau[TAILLE_MAX], int N) //DEBUG
 {
     int i;
 
@@ -115,34 +117,61 @@ void Afficher_Tableau (int tableau[100], int N) //DEBUG
 
 
 
-void contraintes (int tableau[100], int N, int* pair, int* impair){
+void contraintes (int tableau[TAILLE_MAX], int N, int* pair, int* impair){
     int paire_contraintes;
     //int pair;
     //int impair;
+    int counter=0;
+    //int CoupleContraintes[2] = {0,0};
+    int exclusion[100][2] = {0,0};
+
 
     for (int i = -1; i< N-1; i++){
 
-        paire_contraintes = i+1;
+        paire_contraintes = i;//+1
         //printf("l'élément est : %d\n", paire_contraintes);
         //printf("impaire c'est : %d\n", paire_contraintes%2);
         //printf("\n");
 
+        if (paire_contraintes%2 != 0){
+            *impair = tableau[paire_contraintes];
+            printf("%d", *impair);
+            printf("(%d)\n",i);
+        }
 
         if (paire_contraintes%2 == 0){
             *pair = tableau[paire_contraintes];
             printf("voici la paire contrainte %d ", *pair);
+            printf("(%d)", i);
         }
 
-        if (paire_contraintes%2 != 0){
-            *impair = tableau[paire_contraintes];
-            printf("%d\n", *impair);
+
+        //si on a pair puis impair alors on a un couple
+        counter++;
+
+        if (counter%2 ==0 ){
+            exclusion[i-1][1] = tableau[paire_contraintes];
+            exclusion[i-1][0] = tableau[paire_contraintes-1];//-1
+
         }
+
+        //printf("counter :%d\n", counter); DEBUG
+
+
+    }
+    for (int k=0; k<N; k++){
+        for (int j=0; j<2; j++){
+            printf("%d\t", exclusion[k][j]);
+            //printf("j :%d\n", j);
+            //printf("k :%d\n", k);
+        }
+        printf("\n");
     }
 }
 
 void Bloc_Initial(int minV1, int maxV1)
 {
-    int bloc1[100];
+    int bloc1[TAILLE_MAX];
     int j = 0;
 
     for (int i = minV1; i <= maxV1; i++)
@@ -160,10 +189,11 @@ void Bloc_Initial(int minV1, int maxV1)
     printf("\n");
 
 }
+
 int main()
 {
-    char nom_fichier[100];
-    int tableau[100];
+    char nom_fichier[TAILLE_MAX];
+    int tableau[TAILLE_MAX];
     int N;
     int pair, impair;
     int minV1, maxV1;
@@ -173,11 +203,12 @@ int main()
     //https://stackoverflow.com/questions/44670035/how-to-clone-99s-in-fscanffile-d-99s-id-name-2
 
     lire_fichier(nom_fichier, tableau, &N);
+    contraintes(tableau, N, &pair, &impair);
 
    // Afficher_Tableau(tableau, N); // DEBUG
-    contraintes(tableau, N, &pair, &impair);
     Trouver_Min_Max(tableau, N, &minV1, &maxV1);
     Bloc_Initial(minV1, maxV1);
+
 
     return 0;
 }
