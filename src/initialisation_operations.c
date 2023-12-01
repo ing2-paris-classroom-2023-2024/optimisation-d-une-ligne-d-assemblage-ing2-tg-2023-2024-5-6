@@ -67,13 +67,13 @@ void matrice_to_lst(int matrice[][NB_OPERATIONS], Operation op[]) {
         op[i].lst_successeurs[indice] = 0;
     }
     //Affichage des successeurs - FONCTION TEST
-    /*for (int i = 0; i < NB_OPERATIONS; i++) {
+    for (int i = 0; i < NB_OPERATIONS; i++) {
         printf("Operation %d: ", op[i].id);
         for (int j = 0; op[i].lst_successeurs[j] != 0; j++) {
             printf("%d ", op[i].lst_successeurs[j]);
         }
         printf("\n");
-    }*/
+    }
 }
 
 
@@ -112,13 +112,13 @@ int initialisation_successeurs(Operation lst_operations[]) {
     }
 
     //Affichage du tableau de successeurs
-    /*for (int i = 0; i < NB_OPERATIONS; i++) {
+    for (int i = 0; i < NB_OPERATIONS; i++) {
         printf("Operation %d: ", lst_operations[i].id);
         for (int j = 0; j < NB_OPERATIONS; j++) {
             printf("%d ", tableau_successeurs[i][j]);
         }
         printf("\n");
-    }*/
+    }
 
     matrice_to_lst(tableau_successeurs, lst_operations);
 

@@ -16,4 +16,7 @@ void affichage_attributs_operations(Operation op[], int numOperation);
 void affichage_pile(int Pile[]);
 void Affichage_Operations(const Operation operations[], int numOperations);
 
+void affichage_successeur(Operation op[], int i);
+void affichage_precedent(Operation op[], int i);
+
 #endif //OPTIMISATION_D_UNE_LIGNE_D_ASSEMBLAGE_ING2_TG_2023_2024_5_6_FONCTIONS_TESTS_AFFICHAGE_H

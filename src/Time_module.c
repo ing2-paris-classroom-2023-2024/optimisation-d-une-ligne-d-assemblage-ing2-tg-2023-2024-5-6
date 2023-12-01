@@ -28,16 +28,20 @@ void initialisation_duree(Operation operations[]) {
     int id;
     float duration;
 
+
+
     while (fscanf(file, "%d %f", &id, &duration) == 2) {
         operations[id - 1].duree = duration; // Assuming IDs start from 1
+        printf("Operation %d: %f\n", id, duration);
     }
 
     fclose(file);
 
     // Handle missing operations (set duration to 0)
     for (int i = 0; i < NB_OPERATIONS; i++) {
-        if (operations[i].duree <= 0 || operations[i].duree > TEMPS_DE_CYCLE) {
+        if (operations[i].duree < 0 || operations[i].duree > TEMPS_DE_CYCLE) {
             // Set duration to 0 for missing operations
+            printf("Operation %d has an invalid duration. Setting duration to 0.\n", operations[i].id);
             operations[i].duree = 0;
         }
     }
