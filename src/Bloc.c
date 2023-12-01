@@ -133,6 +133,7 @@ void Filtrage(int exclusion[TAILLE_MAX][2], int nbContraintes, int blocInitial[T
         {
             if (exclusion[k][0] == operationCourante || exclusion[k][1] == operationCourante) // Si l'opération courante est dans une contrainte
             {
+
                 // On récupère l'autre opération de la contrainte
                 int autreOperation = (exclusion[k][0] == operationCourante) ? exclusion[k][1] : exclusion[k][0];
                 // Nous sommes dans le cas d'un opérateur ternaire : condition ? valeur si vrai : valeur si faux
@@ -142,9 +143,9 @@ void Filtrage(int exclusion[TAILLE_MAX][2], int nbContraintes, int blocInitial[T
                 /*
                  La signification de cet opérateur est la suivante :
 
-                 Évalue la condition.
-                 _ Si la condition est vraie, l'expression après le point d'interrogation (?) est évaluée.
-                 _ Si la condition est fausse, l'expression après les deux-points (:) est évaluée.
+                 Dans notre cas, la condition est : exclusion[k][0] == operationCourante
+                 _ Si la condition est vraie, exclusion[k][1] est évaluée. ( l'autre opération de la contrainte - Ex: 4)
+                 _ Si la condition est fausse, exclusion[k][0] est évaluée. ( l'opération de la contrainte - Ex: 1)
                  */
 
                 for (int l = 0; l < nbOperationsFiltrees; l++) // On parcourt les opérations déjà filtrées
