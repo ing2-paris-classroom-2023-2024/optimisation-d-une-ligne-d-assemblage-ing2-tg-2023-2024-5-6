@@ -8,6 +8,12 @@ https://www.youtube.com/watch?v=FmaNOdbngLc&t=1843s&ab_channel=FormationVid%C3%A
 #include <limits.h>
 #include "Bloc.h"
 
+// Structure pour représenter une paire d'opérations exclues
+typedef struct {
+    int operation1;
+    int operation2;
+} ExclusionPair;
+
 
 #define TAILLE_MAX 1000
 
@@ -24,20 +30,26 @@ void lire_fichier(char* nom_fichier, int tableau[TAILLE_MAX], int* N)
     }
 
     int i = 0;
-    while (fscanf(fichier, "%d", &tableau[i]) != EOF)
+    while (i < TAILLE_MAX && fscanf(fichier, "%d", &tableau[i]) != EOF)
     {
         i++;
+    }
+
+    if (i == TAILLE_MAX)
+    {
+        printf("\n\n#### ERREUR ####\nLa taille du fichier dépasse la capacité maximale.\n");
+        exit(EXIT_FAILURE);
     }
 
     *N = i; // La taille du tableau est maintenant dans N
 
     fclose(fichier);
-
+}
 
     /////Partie allocation dynamique du tableau
     //http://sdz.tdct.org/sdz/ableaux-pointeurs-et-allocation-dynamique.html
 
-}
+
 
 //Le but de la fonction est de trouver le minimum et le maximum du fichier.txt
 //On obtient le minimum ainsi que le maximum en comparant chaque valeur entre les deux colonnes (i et j)
@@ -98,6 +110,29 @@ void AfficherContraintes(int exclusion[TAILLE_MAX][2], int nbContraintes)
         printf("%d %d\n", exclusion[i][0], exclusion[i][1]);
     }
 }
+
+// Fonction pour lire les exclusions à partir du fichier
+int lireExclusions(ExclusionPair exclusions[TAILLE_MAX], const char *nomFichier) {
+    FILE *fichier = fopen(nomFichier, "r");
+    if (fichier == NULL) {
+        printf("Erreur lors de l'ouverture du fichier d'exclusions.\n");
+        exit(EXIT_FAILURE);
+    }
+
+    int nbExclusions = 0;
+    while (fscanf(fichier, "%d %d", &exclusions[nbExclusions].operation1, &exclusions[nbExclusions].operation2) == 2) {
+        nbExclusions++;
+        if (nbExclusions >= TAILLE_MAX) {
+            printf("Trop d'exclusions. Ajustez TAILLE_MAX si nécessaire.\n");
+            exit(EXIT_FAILURE);
+        }
+    }
+
+    fclose(fichier);
+    return nbExclusions;
+}
+
+
 void Bloc_Initial(int minV1, int maxV1, int blocInitial[TAILLE_MAX], int* tailleBloc)
 {
     int j = 0;
@@ -122,41 +157,33 @@ void Bloc_Initial(int minV1, int maxV1, int blocInitial[TAILLE_MAX], int* taille
 
 
 
-int main()
-{
+int main() {
     char nom_fichier[TAILLE_MAX];
     int tableau[TAILLE_MAX];
     int exclusion[TAILLE_MAX][2];
     int nbContraintes;
     int N;
-    int pair, impair;
+    int operationsNonFiltrees[TAILLE_MAX];
+    int nbOperationsNonFiltrees = 0; // Initialisez nbOperationsNonFiltrees
+
     int minV1, maxV1;
     int blocInitial[TAILLE_MAX];
     int tailleBloc;
-    int bloc1[TAILLE_MAX];
-    int j = 0;
+    int iteration = 0;
 
     printf("Quel fichier voulez-vous lire ?\n");
-    scanf("%99s", nom_fichier);
-    //https://stackoverflow.com/questions/44670035/how-to-clone-99s-in-fscanffile-d-99s-id-name-2
+    scanf("%s", nom_fichier);
 
     lire_fichier(nom_fichier, tableau, &N);
-    //contraintes(tableau, N, &pair, &impair);
     contraintes(tableau, N, exclusion, &nbContraintes);
+
     AfficherContraintes(exclusion, nbContraintes);
 
-    // Afficher_Tableau(tableau, N); // DEBUG
     Trouver_Min_Max(tableau, N, &minV1, &maxV1);
-
-    // Appel de Bloc_Initial avec le tableau blocInitial
     Bloc_Initial(minV1, maxV1, blocInitial, &tailleBloc);
 
-    // Filtrage des opérations en fonction des contraintes
+    // Appel de la fonction Filtrage avec les paramètres appropriés
     Filtrage(exclusion, nbContraintes, blocInitial, tailleBloc);
-
-
 
     return 0;
 }
-
-//*/

@@ -19,11 +19,11 @@ typedef struct Bloc
 } Bloc, *Station;
 
 Station creerNoeud(int valeur);
-Bool estVide(Station debut);
+bool estVide(Station debut);
 int Longueur_Bloc(Station Station);
 void insererFin(Station* tete, int valeur);
 void afficherListe(Station debut);
-Bool peutAjouterOperation(int operation, int exclusion[TAILLE_MAX][2], int nbContraintes, int operationsFiltrees[], int nbOperationsFiltrees);
+//bool peutAjouterOperation(int operation, int exclusion[TAILLE_MAX][2], int nbContraintes, int operationsFiltrees[], int nbOperationsFiltrees);
 void Filtrage(int exclusion[TAILLE_MAX][2], int nbContraintes, int blocInitial[TAILLE_MAX], int tailleBloc);
 
 #endif
