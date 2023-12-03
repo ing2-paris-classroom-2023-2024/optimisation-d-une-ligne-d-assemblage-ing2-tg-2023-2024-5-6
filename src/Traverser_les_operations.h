@@ -5,7 +5,7 @@
 #ifndef OPTIMISATION_D_UNE_LIGNE_D_ASSEMBLAGE_ING2_TG_2023_2024_5_6_TRAVERSER_LES_OPERATIONS_H
 #define OPTIMISATION_D_UNE_LIGNE_D_ASSEMBLAGE_ING2_TG_2023_2024_5_6_TRAVERSER_LES_OPERATIONS_H
 
-#include <main.h>
+
 #include <precedence.h>
 
 int recherche_indice_id(int id, Operation op[], int numOperation);

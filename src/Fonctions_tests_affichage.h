@@ -5,7 +5,6 @@
 #ifndef OPTIMISATION_D_UNE_LIGNE_D_ASSEMBLAGE_ING2_TG_2023_2024_5_6_FONCTIONS_TESTS_AFFICHAGE_H
 #define OPTIMISATION_D_UNE_LIGNE_D_ASSEMBLAGE_ING2_TG_2023_2024_5_6_FONCTIONS_TESTS_AFFICHAGE_H
 
-#include <main.h>
 #include <precedence.h>
 
 int gestion_precedence(Operation lst_operations[]);
