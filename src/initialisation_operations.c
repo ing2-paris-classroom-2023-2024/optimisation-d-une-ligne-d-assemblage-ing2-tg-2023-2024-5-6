@@ -10,7 +10,7 @@
 #include <string.h>
 #include <dirent.h>
 #include <main.h>
-
+#include <precedence.h>
 
 int find_missing_operations(Operation op[], int numOperation, int missing[]) {
 

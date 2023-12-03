@@ -13,6 +13,7 @@
 
 #include <time.h>
 #include <windows.h>
+#include <precedence.h>
 
 #include <Time_module.h>
 
