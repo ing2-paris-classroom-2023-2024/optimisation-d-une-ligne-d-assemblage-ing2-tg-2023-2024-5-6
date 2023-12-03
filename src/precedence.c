@@ -4,7 +4,6 @@
 
 #include "precedence.h"
 #include <initialisation_operations.h>
-#include <Fonctions_tests_affichage.h>
 #include <Traverser_les_operations.h>
 #include <Time_module.h>
 #include <stdio.h>

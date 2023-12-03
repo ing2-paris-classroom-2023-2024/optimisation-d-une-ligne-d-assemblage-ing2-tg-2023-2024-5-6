@@ -121,7 +121,7 @@ void Bloc_Initial(int minV1, int maxV1, int blocInitial[TAILLE_MAX], int* taille
 
 
 int exclusion() {
-    char nom_fichier[TAILLE_MAX];
+    char nom_fichier[TAILLE_MAX] = "exclusions.txt";
     int tableau[TAILLE_MAX];
     int exclusion[TAILLE_MAX][2];
     int nbContraintes;
@@ -134,8 +134,9 @@ int exclusion() {
     int tailleBloc;
     int iteration = 0;
 
-    printf("Quel fichier voulez-vous lire ?\n");
-    scanf("%s", nom_fichier);
+    printf("\n\n\n---------------------------------------------\n");
+    printf("|         CONTRAINTE D' EXCLUSION        |\n");
+    printf("---------------------------------------------\n");
 
     lire_fichier(nom_fichier, tableau, &N);
     contraintes(tableau, N, exclusion, &nbContraintes);
