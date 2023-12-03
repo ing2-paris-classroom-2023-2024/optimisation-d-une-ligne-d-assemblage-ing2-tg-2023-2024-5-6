@@ -101,7 +101,6 @@ int initialisation_successeurs(Operation lst_operations[]) {
     }
 
     //On remplit le tableau de successeurs
-    //On prend en compte les operations manquantes
     for (int i = 0; i < NB_OPERATIONS; i++) {
         for (int j = 0; lst_operations[i].lst_precedents[j] != 0; j++) {
             int index = recherche_indice_id(lst_operations[i].lst_precedents[j], lst_operations, NB_OPERATIONS);
