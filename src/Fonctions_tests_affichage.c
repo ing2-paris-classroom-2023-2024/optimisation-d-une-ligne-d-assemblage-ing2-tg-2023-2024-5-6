@@ -7,11 +7,12 @@
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
-#include <dirent.h>
+
 #include <main.h>
 
 #include <initialisation_operations.h>
 #include <Time_module.h>
+#include <color.h>
 
 #include <time.h>
 #include <windows.h>
@@ -89,7 +90,6 @@ void affichage_attributs_operations(Operation op[], int numOperation) {
 
 void affichage_pile(int Pile[]) {
     //Fonction qui affiche la pile
-    printf("Pile: ");
     for (int j = 0; j < NB_OPERATIONS; j++) {
         if (Pile[j] != 0) {
             printf("%d ", Pile[j]);
@@ -119,4 +119,36 @@ void Affichage_Operations(const Operation operations[], int numOperations) {
         }
         printf("\n\n");*/
     }
+}
+
+void affichage_init_graphe() {
+    jaune();
+    printf("---------------------------------------------\n");
+    printf("|         INITIALISATION DU GRAPHE          |\n");
+    printf("---------------------------------------------\n");
+    reset();
+}
+
+void affichage_precedence() {
+    bleu();
+    printf("---------------------------------------------\n");
+    printf("|         CONTRAINTE DE PRECEDENCE          |\n");
+    printf("---------------------------------------------\n");
+    reset();
+}
+
+void affichage_exclusion() {
+    vert();
+    printf("---------------------------------------------\n");
+    printf("|          CONTRAINTE D' EXCLUSION          |\n");
+    printf("---------------------------------------------\n");
+    reset();
+}
+
+void affichage_multi_contraintes() {
+    magenta();
+    printf("---------------------------------------------\n");
+    printf("|             MULTI-CONTRAINTES             |\n");
+    printf("---------------------------------------------\n");
+    reset();
 }

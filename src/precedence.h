@@ -6,7 +6,7 @@
 #define OPTIMISATION_D_UNE_LIGNE_D_ASSEMBLAGE_ING2_TG_2023_2024_5_6_PRECEDENCE_H
 
 #define NB_OPERATIONS 36
-#define TEMPS_DE_CYCLE 10
+#define TEMPS_DE_CYCLE 1000
 
 typedef struct {
     int id;
@@ -20,6 +20,7 @@ typedef struct {
     float current_time;
 } t_clock;
 
+void initialisation_graphe_p();
 int precedence();
 
 #endif //OPTIMISATION_D_UNE_LIGNE_D_ASSEMBLAGE_ING2_TG_2023_2024_5_6_PRECEDENCE_H

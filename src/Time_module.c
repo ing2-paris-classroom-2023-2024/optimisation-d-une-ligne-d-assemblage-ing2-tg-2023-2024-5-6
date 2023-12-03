@@ -6,15 +6,8 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
-#include <string.h>
-#include <dirent.h>
 #include <main.h>
 
-#include <time.h>
-#include <windows.h>
-
-#include <Time_module.h>
 
 //Initisalisation de la duree pour chaque operations en utilisant le .txt "operations.txt"
 void initialisation_duree(Operation operations[]) {
@@ -45,6 +38,7 @@ void initialisation_duree(Operation operations[]) {
             operations[i].duree = 0;
         }
     }
+    printf("---------------------------------\n");
     printf("Initialisation des durees terminee.\n");
 }
 

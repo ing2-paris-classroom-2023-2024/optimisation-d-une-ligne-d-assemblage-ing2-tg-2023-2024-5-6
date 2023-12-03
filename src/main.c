@@ -5,10 +5,31 @@
 
 #include <main.h>
 #include <precedence.h>
+#include <exclusion.h>
+#include <multi_contraintes.h>
 
 int main() {
-    precedence();
+
+    /*
+     * 1. Initialisation des opérations
+     * 2. Précédence
+     */
+
+    initialisation_graphe_p();
+
+    /*
+     * 3. Exclusion
+     */
+
+    printf("\n");
     exclusion();
+
+    /*
+     * 4. Multi-contraintes
+     */
+
+    printf("\n");
+    multi_contraintes();
     return 0;
 }
 

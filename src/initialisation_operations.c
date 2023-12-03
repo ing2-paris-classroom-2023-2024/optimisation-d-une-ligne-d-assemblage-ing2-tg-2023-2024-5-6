@@ -6,9 +6,6 @@
 #include <Traverser_les_operations.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
-#include <string.h>
-#include <dirent.h>
 #include <main.h>
 
 
@@ -160,7 +157,7 @@ void fusion_Operations(Operation operations[], int *numOperations) {
         }
     }
     printf("---------------------------------\n");
-    printf("Merge des operations terminee.\n");
+    printf("Fusion des operations terminee.\n");
 }
 
 void lecture_de_fichier(Operation operations[], int *numOperations) {

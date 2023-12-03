@@ -159,5 +159,4 @@ void Filtrage(int exclusion[TAILLE_MAX][2], int nbContraintes, int blocInitial[T
     free(station[1]);
     free(station[2]);
     free(station);
-
 }

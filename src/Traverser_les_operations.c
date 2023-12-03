@@ -5,14 +5,12 @@
 #include "Traverser_les_operations.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
-#include <string.h>
-#include <dirent.h>
 #include <main.h>
 
 #include <initialisation_operations.h>
 #include <Time_module.h>
 #include <Fonctions_tests_affichage.h>
+#include <color.h>
 
 #include <time.h>
 #include <windows.h>
@@ -147,7 +145,6 @@ void traverse_operations(Operation op[], int startOperation, int numOperation) {
     for (int j = indice; j < NB_OPERATIONS; j++) {
         Pile[j] = 0;
     }
-    printf("Operation de debut: %d\n", Pile[0]);
     float duree_totale = 0;
 
     //affichage_attributs_operations(op, numOperation);
@@ -173,6 +170,13 @@ void traverse_operations(Operation op[], int startOperation, int numOperation) {
         duree_totale += 15*op[indice].duree;
         op[indice].statut_complete = 1;
         int num_successors = 1;
+        //Si duree depasse le temps de cycle
+        if (duree_totale > TEMPS_DE_CYCLE) {
+            printf("Duree totale: %f ms\n", duree_totale);
+            printf("La duree totale depasse le temps de cycle.\n");
+            return;
+        }
+
         if (op[indice].lst_successeurs[0] != 0) {
 
             while (lst_successeurs[0] > 0 && lst_successeurs[0] <= NB_OPERATIONS) {
@@ -204,7 +208,10 @@ void traverse_operations(Operation op[], int startOperation, int numOperation) {
         }
         i++;
     }
-    printf("Duree totale: %f ms\n", duree_totale);
+    printf("\nPile finale: \n");
+    rouge();
+    affichage_pile(Pile);
+    reset();
 }
 
 

@@ -7,6 +7,8 @@ https://www.youtube.com/watch?v=FmaNOdbngLc&t=1843s&ab_channel=FormationVid%C3%A
 #include <stdlib.h>
 #include <limits.h>
 #include "Bloc.h"
+#include <Fonctions_tests_affichage.h>
+#include <exclusion.h>
 
 
 #define TAILLE_MAX 1000
@@ -134,9 +136,7 @@ int exclusion() {
     int tailleBloc;
     int iteration = 0;
 
-    printf("\n\n\n---------------------------------------------\n");
-    printf("|         CONTRAINTE D' EXCLUSION        |\n");
-    printf("---------------------------------------------\n");
+    affichage_exclusion();
 
     lire_fichier(nom_fichier, tableau, &N);
     contraintes(tableau, N, exclusion, &nbContraintes);
