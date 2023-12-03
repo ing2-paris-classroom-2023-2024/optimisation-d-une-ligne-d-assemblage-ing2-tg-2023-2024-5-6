@@ -8,6 +8,12 @@
 
 void Filtrage(int exclusion[TAILLE_MAX][2], int nbContraintes, int blocInitial[TAILLE_MAX], int tailleBloc)
 {
+
+    // https://c.developpez.com/cours/20-heures/?page=page_16
+    // https://www.youtube.com/watch?v=6mlp13UGfUM&t=374s&ab_channel=HassanELBAHI
+    // https://www.youtube.com/watch?v=eY9j3qmy3bQ&ab_channel=BilalEnesFedar
+    // https://openclassrooms.com/forum/sujet/un-tableau-a-deux-dimensions-avec-malloc-69343
+
     int nbOperationsFiltrees = 0;
     int nbOperationsNonFiltrees = 0;
     int resteoperationnonfiltrees = 0;
@@ -43,6 +49,19 @@ void Filtrage(int exclusion[TAILLE_MAX][2], int nbContraintes, int blocInitial[T
             if (exclusion[k][0] == operationCourante || exclusion[k][1] == operationCourante)
             {
                 int autreOperation = (exclusion[k][0] == operationCourante) ? exclusion[k][1] : exclusion[k][0];
+                // On récupère l'autre opération de la contrainte
+                // Nous sommes dans le cas d'un opérateur ternaire : condition ? valeur si vrai : valeur si faux
+                // Car on veut récupérer l'autre opération de la contrainte
+                // https://c.developpez.com/cours/20-heures/?page=page_16
+
+                /*
+                La signification de cet opérateur est la suivante :
+
+                Dans notre cas, la condition est : exclusion[k][0] == operationCourante
+                _ Si la condition est vraie, exclusion[k][1] est évaluée. ( l'autre opération de la contrainte - Ex: 4)
+                _ Si la condition est fausse, exclusion[k][0] est évaluée. ( l'opération de la contrainte - Ex: 1)
+                */
+
 
                 for (int l = 0; l < nbOperationsFiltrees; l++)
                 {
@@ -59,41 +78,41 @@ void Filtrage(int exclusion[TAILLE_MAX][2], int nbContraintes, int blocInitial[T
         if (peutEtreAjoute)
         {
             station[0][nbOperationsFiltrees] = operationCourante;
-            nbOperationsFiltrees++;
+            nbOperationsFiltrees++; // on place les éléments dans la station 0
         }
-        else
-        {
+        else {
             station[1][nbOperationsNonFiltrees] = operationCourante;
-            nbOperationsNonFiltrees++;
+            nbOperationsNonFiltrees++; // on place les éléments dans la station 1
         }
-    }
 
-    // Boucle pour gérer le reste des opérations non filtrées
-    for (int i = 0; i < nbOperationsNonFiltrees; i++)
+
+
+//pour cette partie, on s'occupe du reste : dans le cas ou la station 1 possède une exclusion (ex: 1 4) ,
+// on doit supprimer l'élément 2 (ex : 4) (exclusion[k][1]) de la station 1 et le mettre dans la station 2.
+// permet que toutes les contraintes soient respectées.
+    for (int i = 0; i < nbOperationsNonFiltrees; i++) // le nombre élément station 1
     {
-        int operationCourante = station[1][i];
+        int operationCourante1 = station[1][i];
         bool reste = true;
 
         for (int k = 0; k < nbContraintes; k++)
         {
-            if (exclusion[k][0] == operationCourante || exclusion[k][1] == operationCourante)
+            if (exclusion[k][0] == operationCourante1 || exclusion[k][1] == operationCourante1)
             {
-                int autreOperation = (exclusion[k][0] == operationCourante) ? exclusion[k][1] : exclusion[k][0];
+                int autreOperation = (exclusion[k][0] == operationCourante1) ? exclusion[k][1] : exclusion[k][0];
 
                 for (int l = 0; l < nbOperationsNonFiltrees; l++)
                 {
-                    if (station[1][l] == autreOperation)
+                    if (station[1][l] == autreOperation) // si on trouve une opération, on supprime de la station1
                     {
-                        // Supprimer l'opération de la station[1]
                         for (int m = l; m < nbOperationsNonFiltrees - 1; m++)
                         {
-                            station[1][m] = station[1][m + 1];
+                            station[1][m] = station[1][m + 1];//déplacer les éléments pour combler le vide
                         }
-                        nbOperationsNonFiltrees--;
+                        nbOperationsNonFiltrees--; //retirer le nombre opération de la station 1
 
-                        // Ajouter l'opération à la station[2]
+                        //on place dans la station[2]
                         station[2][resteoperationnonfiltrees] = autreOperation;
-                        //nbOperationsNonFiltrees++;
                         resteoperationnonfiltrees++;
 
                         reste = false;
@@ -103,11 +122,8 @@ void Filtrage(int exclusion[TAILLE_MAX][2], int nbContraintes, int blocInitial[T
             }
         }
 
-        if (reste)
-        {
-            station[2][resteoperationnonfiltrees] = operationCourante;
-            //resteoperationnonfiltrees++;
-        }
+        if (reste) station[2][resteoperationnonfiltrees] = operationCourante1;
+
 
 
     }
@@ -118,14 +134,16 @@ void Filtrage(int exclusion[TAILLE_MAX][2], int nbContraintes, int blocInitial[T
     {
         printf("%d ", station[0][i]);
     }
-    printf("\n");
 
     // Affichage des opérations non filtrées
-    printf("Operations non filtrees :\n");
+    printf("\nOperations non filtrees :\n");
+
     for (int i = 0; i < nbOperationsNonFiltrees; i++)
     {
         printf("%d ", station[1][i]);
     }
+
+    // Affichage des opérations restantes
     printf("\n Operation restante :\n");
 
     for (int i = 0; i < resteoperationnonfiltrees; i++)
@@ -138,4 +156,5 @@ void Filtrage(int exclusion[TAILLE_MAX][2], int nbContraintes, int blocInitial[T
     free(station[1]);
     free(station[2]);
     free(station);
+}
 }
