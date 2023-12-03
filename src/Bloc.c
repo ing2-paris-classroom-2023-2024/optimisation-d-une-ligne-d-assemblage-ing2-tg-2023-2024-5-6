@@ -84,7 +84,7 @@ void Filtrage(int exclusion[TAILLE_MAX][2], int nbContraintes, int blocInitial[T
             station[1][nbOperationsNonFiltrees] = operationCourante;
             nbOperationsNonFiltrees++; // on place les éléments dans la station 1
         }
-
+    }
 
 
 //pour cette partie, on s'occupe du reste : dans le cas ou la station 1 possède une exclusion (ex: 1 4) ,
@@ -92,14 +92,14 @@ void Filtrage(int exclusion[TAILLE_MAX][2], int nbContraintes, int blocInitial[T
 // permet que toutes les contraintes soient respectées.
     for (int i = 0; i < nbOperationsNonFiltrees; i++) // le nombre élément station 1
     {
-        int operationCourante1 = station[1][i];
+        int operationCourante = station[1][i];
         bool reste = true;
 
         for (int k = 0; k < nbContraintes; k++)
         {
-            if (exclusion[k][0] == operationCourante1 || exclusion[k][1] == operationCourante1)
+            if (exclusion[k][0] == operationCourante || exclusion[k][1] == operationCourante)
             {
-                int autreOperation = (exclusion[k][0] == operationCourante1) ? exclusion[k][1] : exclusion[k][0];
+                int autreOperation = (exclusion[k][0] == operationCourante) ? exclusion[k][1] : exclusion[k][0];
 
                 for (int l = 0; l < nbOperationsNonFiltrees; l++)
                 {
@@ -122,7 +122,10 @@ void Filtrage(int exclusion[TAILLE_MAX][2], int nbContraintes, int blocInitial[T
             }
         }
 
-        if (reste) station[2][resteoperationnonfiltrees] = operationCourante1;
+        if (reste) {
+            station[2][resteoperationnonfiltrees] = operationCourante;
+
+        }
 
 
 
@@ -156,5 +159,5 @@ void Filtrage(int exclusion[TAILLE_MAX][2], int nbContraintes, int blocInitial[T
     free(station[1]);
     free(station[2]);
     free(station);
-}
+
 }
