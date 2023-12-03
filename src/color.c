@@ -47,6 +47,8 @@ void light() {
     HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
     SetConsoleTextAttribute(hConsole, FOREGROUND_INTENSITY);
 }
+
+
 void reset() {
     ///FONCTION DE REMISE A ZERO DE COULEUR TEXTE
     HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);

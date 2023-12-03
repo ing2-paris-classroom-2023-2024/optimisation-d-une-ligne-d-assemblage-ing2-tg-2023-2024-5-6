@@ -7,8 +7,11 @@
 #include <precedence.h>
 #include <exclusion.h>
 #include <multi_contraintes.h>
+#include <Fonctions_tests_affichage.h>
+
 
 int main() {
+    affichage_debut();
 
     /*
      * 1. Initialisation des opérations
