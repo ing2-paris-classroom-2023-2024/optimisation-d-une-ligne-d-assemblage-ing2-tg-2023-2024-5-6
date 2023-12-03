@@ -11,5 +11,6 @@ add_executable(optimisation_d_une_ligne_d_assemblage_ing2_tg_2023_2024_5_6
         src/main.c
         src/Bloc.c
         src/Bloc.h
-
+        src/exclusion.c
+        src/main.h
 )
