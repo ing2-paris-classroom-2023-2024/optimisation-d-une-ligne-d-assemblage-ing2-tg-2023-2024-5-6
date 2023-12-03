@@ -150,7 +150,7 @@ void traverse_operations(Operation op[], int startOperation, int numOperation) {
     printf("Operation de debut: %d\n", Pile[0]);
     float duree_totale = 0;
 
-    affichage_attributs_operations(op, numOperation);
+    //affichage_attributs_operations(op, numOperation);
 
     while (i < NB_OPERATIONS) {
         // Affichage de la pile
@@ -164,8 +164,8 @@ void traverse_operations(Operation op[], int startOperation, int numOperation) {
         int indice = recherche_indice_id(Pile[i], op, numOperation);
         recherche_sucesseurs(op, Pile[i], lst_successeurs, numOperation);
         //Mettre a jour le statut_complete de l'operation
-        printf("Operation %d\n", op[indice].id);
-        printf("Duree: %f\n", op[indice].duree);
+        //printf("Operation %d\n", op[indice].id);
+        //printf("Duree: %f\n", op[indice].duree);
         unsigned int microseconds = (unsigned int)(op[indice].duree * 1000000);
         //printf("microseconds: %d\n", microseconds);
         usleep(microseconds);

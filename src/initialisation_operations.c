@@ -67,13 +67,13 @@ void matrice_to_lst(int matrice[][NB_OPERATIONS], Operation op[]) {
         op[i].lst_successeurs[indice] = 0;
     }
     //Affichage des successeurs - FONCTION TEST
-    for (int i = 0; i < NB_OPERATIONS; i++) {
+    /*for (int i = 0; i < NB_OPERATIONS; i++) {
         printf("Operation %d: ", op[i].id);
         for (int j = 0; op[i].lst_successeurs[j] != 0; j++) {
             printf("%d ", op[i].lst_successeurs[j]);
         }
         printf("\n");
-    }
+    }*/
 }
 
 
@@ -111,13 +111,13 @@ int initialisation_successeurs(Operation lst_operations[]) {
     }
 
     //Affichage du tableau de successeurs
-    for (int i = 0; i < NB_OPERATIONS; i++) {
+    /*for (int i = 0; i < NB_OPERATIONS; i++) {
         printf("Operation %d: ", lst_operations[i].id);
         for (int j = 0; j < NB_OPERATIONS; j++) {
             printf("%d ", tableau_successeurs[i][j]);
         }
         printf("\n");
-    }
+    }*/
 
     matrice_to_lst(tableau_successeurs, lst_operations);
 
@@ -200,11 +200,11 @@ void lecture_de_fichier(Operation operations[], int *numOperations) {
             //On augmente la taille de lst_precedents
             operations[*numOperations - 1].lst_precedents = realloc(operations[*numOperations - 1].lst_precedents,(*numOperations) * sizeof(int));
         }
-        printf("%d ", operations[*numOperations].lst_precedents[0]);
+        //printf("%d ", operations[*numOperations].lst_precedents[0]);
         //Affichage de lst_precedents
-        for (int i = 0; operations[*numOperations].lst_precedents[i] != 0; i++) {
+        /*for (int i = 0; operations[*numOperations].lst_precedents[i] != 0; i++) {
             printf("%d ", operations[*numOperations].lst_precedents[i]);
-        }
+        }*/
     }
     fclose(file);
     printf("---------------------------------\n");

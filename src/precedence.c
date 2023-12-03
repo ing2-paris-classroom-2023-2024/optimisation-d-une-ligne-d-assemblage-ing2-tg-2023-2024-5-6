@@ -23,27 +23,14 @@ int precedence() {
     //affichage_attributs_operations(operations, numOperations);
 
     printf("---------------------------------------------\n");
-    Affichage_Operations(operations, numOperations);
+    //Affichage_Operations(operations, numOperations);
+    printf("---------------------------------------------\n");
+    printf("|         CONTRAINTE DE PRECEDENCE          |\n");
     printf("---------------------------------------------\n");
 
-
-    // Call the traverse_operations function
+    // Appel de la fonction qui va parcourir les operations
     traverse_operations(operations, 0, numOperations);
 
-    //gestion_precedence(operations);
-
-    //On commence a executer l'Operation 1. Apres la duree, on passe a l'Operation qui suit la 1 (en regardant les precedents)
-    //On continue jusqu'a ce que toutes les Operations soient completees
-    //On affiche le temps total d'execution
-    //On affiche le temps d'execution de chaque Operation
-
-    /*
-    t_clock clock;
-    initializeClock(&clock);
-
-    for (int i = 0; i < numOperations; i++) {
-        tick(&clock, &operations[i]);
-    }*/
 
     return 0;
 }
