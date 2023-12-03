@@ -163,11 +163,7 @@ void traverse_operations(Operation op[], int startOperation, int numOperation) {
         //Mettre a jour le statut_complete de l'operation
         //printf("Operation %d\n", op[indice].id);
         //printf("Duree: %f\n", op[indice].duree);
-        unsigned int microseconds = (unsigned int)(op[indice].duree * 1000000);
-        //printf("microseconds: %d\n", microseconds);
-        usleep(microseconds);
-        //printf("Operation %d complete\n", op[indice].id);
-        duree_totale += 15*op[indice].duree;
+
         op[indice].statut_complete = 1;
         int num_successors = 1;
         //Si duree depasse le temps de cycle
@@ -202,6 +198,11 @@ void traverse_operations(Operation op[], int startOperation, int numOperation) {
                         // Set statut_complete to 1 for the added operation
                         int addedOperationIndex = recherche_indice_id(id, op, NB_OPERATIONS);
                         num_successors++;
+                        unsigned int microseconds = (unsigned int)(op[indice].duree * 1000000);
+                        //printf("microseconds: %d\n", microseconds);
+                        usleep(microseconds);
+                        //printf("Operation %d complete\n", op[indice].id);
+                        duree_totale += op[indice].duree;
                     }
                 }
             }
