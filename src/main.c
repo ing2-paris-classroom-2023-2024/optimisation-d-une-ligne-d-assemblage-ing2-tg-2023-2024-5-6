@@ -8,12 +8,6 @@ https://www.youtube.com/watch?v=FmaNOdbngLc&t=1843s&ab_channel=FormationVid%C3%A
 #include <limits.h>
 #include "Bloc.h"
 
-// Structure pour représenter une paire d'opérations exclues
-typedef struct {
-    int operation1;
-    int operation2;
-} ExclusionPair;
-
 
 #define TAILLE_MAX 1000
 
@@ -78,17 +72,6 @@ void Trouver_Min_Max(int tableau[TAILLE_MAX], int N, int* minV1, int* maxV1)
 }
 
 
-void Afficher_Tableau (int tableau[TAILLE_MAX], int N) //DEBUG
-{
-    int i;
-
-    // Parcours du tableau
-    for (i = 0; i < N; i++)
-    {
-        printf("%d ", tableau[i]);
-    }
-    printf("\n");
-}
 
 void contraintes(int tableau[TAILLE_MAX], int N, int exclusion[TAILLE_MAX][2], int* nbContraintes)
 {
@@ -111,26 +94,6 @@ void AfficherContraintes(int exclusion[TAILLE_MAX][2], int nbContraintes)
     }
 }
 
-// Fonction pour lire les exclusions à partir du fichier
-int lireExclusions(ExclusionPair exclusions[TAILLE_MAX], const char *nomFichier) {
-    FILE *fichier = fopen(nomFichier, "r");
-    if (fichier == NULL) {
-        printf("Erreur lors de l'ouverture du fichier d'exclusions.\n");
-        exit(EXIT_FAILURE);
-    }
-
-    int nbExclusions = 0;
-    while (fscanf(fichier, "%d %d", &exclusions[nbExclusions].operation1, &exclusions[nbExclusions].operation2) == 2) {
-        nbExclusions++;
-        if (nbExclusions >= TAILLE_MAX) {
-            printf("Trop d'exclusions. Ajustez TAILLE_MAX si nécessaire.\n");
-            exit(EXIT_FAILURE);
-        }
-    }
-
-    fclose(fichier);
-    return nbExclusions;
-}
 
 
 void Bloc_Initial(int minV1, int maxV1, int blocInitial[TAILLE_MAX], int* tailleBloc)
@@ -182,8 +145,7 @@ int main() {
     Trouver_Min_Max(tableau, N, &minV1, &maxV1);
     Bloc_Initial(minV1, maxV1, blocInitial, &tailleBloc);
 
-    // Appel de la fonction Filtrage avec les paramètres appropriés
+    // Appel de la fonction RenouvelerContraintes avec les paramètres appropriés
     Filtrage(exclusion, nbContraintes, blocInitial, tailleBloc);
-
     return 0;
 }
