@@ -14,5 +14,8 @@
 
 void multi_contraintes() {
     affichage_multi_contraintes();
+
+    //Fonction qui lance la contrainte de precendece et la contrainte d'exclusion en meme temps
+
     return;
 }
