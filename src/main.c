@@ -10,6 +10,5 @@ https://www.youtube.com/watch?v=FmaNOdbngLc&t=1843s&ab_channel=FormationVid%C3%A
 int main() {
     precedence();
     exclusion();
-
     return 0;
 }
