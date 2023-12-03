@@ -122,13 +122,13 @@ void Affichage_Operations(const Operation operations[], int numOperations) {
 }
 
 void affichage_debut() {
-    printf("\n\n");
+    printf("\n\n\n");
     rouge();
     printf("===================================================================\n");
     printf("|   ligne d'assemblage de la future voiture électrique ECElecar   |\n");
     printf("===================================================================\n");
     reset();
-    printf("\n\n");
+    printf("\n\n\n");
 }
 
 void affichage_init_graphe() {
