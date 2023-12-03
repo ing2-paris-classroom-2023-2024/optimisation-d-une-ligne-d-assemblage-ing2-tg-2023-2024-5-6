@@ -5,18 +5,6 @@
 #ifndef OPTIMISATION_D_UNE_LIGNE_D_ASSEMBLAGE_ING2_TG_2023_2024_5_6_PRECEDENCE_H
 #define OPTIMISATION_D_UNE_LIGNE_D_ASSEMBLAGE_ING2_TG_2023_2024_5_6_PRECEDENCE_H
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
-#include <string.h>
-#include <dirent.h>
-#include "main.h"
-
-#include "initialisation_operations.h"
-#include "Fonctions_tests_affichage.h"
-#include "Traverser_les_operations.h"
-#include "Time_module.h"
-
 #define NB_OPERATIONS 36
 #define TEMPS_DE_CYCLE 10
 
@@ -31,7 +19,6 @@ typedef struct {
 typedef struct {
     float current_time;
 } t_clock;
-
 
 int precedence();
 

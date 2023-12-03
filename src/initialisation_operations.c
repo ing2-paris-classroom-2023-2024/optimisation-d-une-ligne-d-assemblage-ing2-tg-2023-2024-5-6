@@ -10,7 +10,7 @@
 #include <string.h>
 #include <dirent.h>
 #include <main.h>
-#include <precedence.h>
+
 
 int find_missing_operations(Operation op[], int numOperation, int missing[]) {
 
@@ -95,7 +95,6 @@ int initialisation_successeurs(Operation lst_operations[]) {
     int tableau_successeurs[NB_OPERATIONS][NB_OPERATIONS];
 
     for (int i = 0; i < NB_OPERATIONS; i++) {
-        //On initialise le tableau de successeurs a 0
         for (int j = 0; j < NB_OPERATIONS; j++) {
             tableau_successeurs[i][j] = 0;
         }

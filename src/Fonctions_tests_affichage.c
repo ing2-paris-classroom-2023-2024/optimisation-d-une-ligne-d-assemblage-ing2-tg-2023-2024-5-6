@@ -12,9 +12,6 @@
 
 #include <initialisation_operations.h>
 #include <Time_module.h>
-#include <Fonctions_tests_affichage.h>
-#include <Traverser_les_operations.h>
-#include <precedence.h>
 
 #include <time.h>
 #include <windows.h>
