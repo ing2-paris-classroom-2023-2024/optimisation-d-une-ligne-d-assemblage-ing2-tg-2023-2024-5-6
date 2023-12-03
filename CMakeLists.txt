@@ -10,6 +10,11 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/cmake-build-debug
 add_executable(optimisation_d_une_ligne_d_assemblage_ing2_tg_2023_2024_5_6
         src/main.c
         src/main.h
+        
+        src/Bloc.c
+        src/Bloc.h
+        src/exclusion.c
+
         src/initialisation_operations.c
         src/initialisation_operations.h
         src/Time_module.c
