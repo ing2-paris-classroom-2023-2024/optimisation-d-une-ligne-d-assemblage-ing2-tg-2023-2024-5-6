@@ -25,7 +25,9 @@ int main() {
      */
 
     printf("\n");
-    exclusion();
+    int **station;
+    station = malloc(3 * sizeof(int *));
+    exclusion(station);
 
     /*
      * 4. Multi-contraintes

@@ -12,5 +12,6 @@
  * FONCTION MERE *
  *****************/
 void initialisation_duree(Operation lst_operations[]);
+float calcul_duree_total(int stations[NB_OPERATIONS], int i, int version, Operation operations[]);
 
 #endif //OPTIMISATION_D_UNE_LIGNE_D_ASSEMBLAGE_ING2_TG_2023_2024_5_6_TIME_MODULE_H

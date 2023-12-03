@@ -95,11 +95,11 @@ int recherche_sucesseurs(Operation op[], int id, int lst_sucesseurs[], int numOp
 }
 
 
-int id_in_pile(int id, int Pile[]) {
-    //Fonction qui verifie si l'id est dans la pile
+int id_in_File(int id, int File[]) {
+    //Fonction qui verifie si l'id est dans la File
     int i = 0;
-    while (Pile[i] != 0) {
-        if (Pile[i] == id) { return 1; }
+    while (File[i] != 0) {
+        if (File[i] == id) { return 1; }
         i++;
     }
     return 0;
@@ -129,13 +129,13 @@ void traverse_operations(Operation op[], int startOperation, int numOperation) {
     //  Effectue un parcours en profondeur du graphe des opérations
     //  En commençant par une opération spécifiée et en visitant ses successeurs.
 
-    // Definition d'une pile de NB_OPERATIONS lignes
-    int Pile[NB_OPERATIONS];
+    // Definition d'une File de NB_OPERATIONS lignes
+    int File[NB_OPERATIONS];
     int indice = 0;
-    //Ajout dans la Pile toute les operations avec 0 comme precedent
+    //Ajout dans la File toute les operations avec 0 comme precedent
     for (int i = 0; i < NB_OPERATIONS; i++) {
         if (op[i].lst_precedents[0] == 0) {
-            Pile[indice] = op[i].id;
+            File[indice] = op[i].id;
             op[i].statut_complete = 1;
             indice++;
         }
@@ -143,24 +143,24 @@ void traverse_operations(Operation op[], int startOperation, int numOperation) {
 
     int i = 0;
     for (int j = indice; j < NB_OPERATIONS; j++) {
-        Pile[j] = 0;
+        File[j] = 0;
     }
     float duree_totale = 0;
 
     //affichage_attributs_operations(op, numOperation);
 
     while (i < NB_OPERATIONS) {
-        // Affichage de la pile
-        affichage_pile(Pile);
+        // Affichage de la File
+        affichage_File(File);
         //affichage_successeur(op, i);
 
         int lst_successeurs[NB_OPERATIONS];
         lst_successeurs[0] = 0; // Initialisation de la liste des successeurs
 
         // si id possede un successeur
-        int indice = recherche_indice_id(Pile[i], op, numOperation);
-        recherche_sucesseurs(op, Pile[i], lst_successeurs, numOperation);
-        //Mettre a jour le statut_complete de l'operation
+        int indice = recherche_indice_id(File[i], op, numOperation);
+        recherche_sucesseurs(op, File[i], lst_successeurs, numOperation);
+
         //printf("Operation %d\n", op[indice].id);
         //printf("Duree: %f\n", op[indice].duree);
 
@@ -178,23 +178,23 @@ void traverse_operations(Operation op[], int startOperation, int numOperation) {
             while (lst_successeurs[0] > 0 && lst_successeurs[0] <= NB_OPERATIONS) {
                 int id = lst_successeurs[0];
                 int j = 0;
-                if (id_in_pile(id, Pile)) {
-                    // Si l'id est dans la pile, on ne fait rien
+                if (id_in_File(id, File)) {
+                    // Si l'id est dans la File, on ne fait rien
                     break;
                 }
                 while (lst_successeurs[j] != 0) {
                     lst_successeurs[j] = lst_successeurs[j + 1];
                     j++;
                 }
-                if (!id_in_pile(id, Pile)) {
-                    // Sinon, on l'ajoute a la pile si tous les precedents ont statut_complete = 1
+                if (!id_in_File(id, File)) {
+                    // Sinon, on l'ajoute a la File si tous les precedents ont statut_complete = 1
                     if (recherche_precedents(op, id)) {
-                        // Recherche de l'indice de la pile ou valeur = 0
+                        // Recherche de l'indice de la File ou valeur = 0
                         int k = 0;
-                        while (Pile[k] != 0) {
+                        while (File[k] != 0) {
                             k++;
                         }
-                        Pile[k] = id;
+                        File[k] = id;
                         // Set statut_complete to 1 for the added operation
                         int addedOperationIndex = recherche_indice_id(id, op, NB_OPERATIONS);
                         num_successors++;
@@ -202,16 +202,16 @@ void traverse_operations(Operation op[], int startOperation, int numOperation) {
                         //printf("microseconds: %d\n", microseconds);
                         usleep(microseconds);
                         //printf("Operation %d complete\n", op[indice].id);
-                        duree_totale += op[indice].duree;
+                        duree_totale += calcul_duree_total(File,indice, 2, op);
                     }
                 }
             }
         }
         i++;
     }
-    printf("\nPile finale: \n");
+    printf("\nFile finale: \n");
     rouge();
-    affichage_pile(Pile);
+    affichage_File(File);
     reset();
 }
 

@@ -136,6 +136,11 @@ int exclusion() {
     int tailleBloc;
     int iteration = 0;
 
+    /**station = malloc(TAILLE_MAX * sizeof(int *));
+    for (int i = 0; i < TAILLE_MAX; i++) {
+        (*station)[i] = malloc(2 * sizeof(int));
+    }*/
+
     affichage_exclusion();
 
     lire_fichier(nom_fichier, tableau, &N);
@@ -148,5 +153,14 @@ int exclusion() {
 
     // Appel de la fonction RenouvelerContraintes avec les paramètres appropriés
     Filtrage(exclusion, nbContraintes, blocInitial, tailleBloc);
+
+    /*printf("Inside exclusion Function:\n");
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < tailleBloc; j++) {
+            printf("%d ", station[i][j]);
+        }
+        printf("\n");
+    }*/
+
     return 0;
 }

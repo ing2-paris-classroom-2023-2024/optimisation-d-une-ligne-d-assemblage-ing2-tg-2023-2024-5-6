@@ -13,7 +13,7 @@ void initializeClock(t_clock *clock);
 void tick(t_clock *clock, Operation *operation);
 
 void affichage_attributs_operations(Operation op[], int numOperation);
-void affichage_pile(int Pile[]);
+void affichage_File(int File[]);
 void affichage_dernier_element_de_pile(int Pile[]);
 void Affichage_Operations(const Operation operations[], int numOperations);
 

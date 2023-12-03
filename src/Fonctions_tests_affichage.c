@@ -37,7 +37,7 @@ int gestion_precedence(Operation lst_operations[]) {
 
 
 int P_est_vide(int P[]) {
-    //Fonction qui verifie si la pile est vide
+    //Fonction qui verifie si la File est vide
     if (P[0] == 0) {
         return 1;
     }
@@ -88,11 +88,11 @@ void affichage_attributs_operations(Operation op[], int numOperation) {
     }
 }
 
-void affichage_pile(int Pile[]) {
-    //Fonction qui affiche la pile
+void affichage_File(int File[]) {
+    //Fonction qui affiche la File
     for (int j = 0; j < NB_OPERATIONS; j++) {
-        if (Pile[j] != 0) {
-            printf("%d ", Pile[j]);
+        if (File[j] != 0) {
+            printf("%d ", File[j]);
         }
     }
     printf("\n");

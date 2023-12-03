@@ -6,7 +6,7 @@
 
 #define TAILLE_MAX 100 // Remplacez la valeur par celle appropriée
 
-void Filtrage(int exclusion[TAILLE_MAX][2], int nbContraintes, int blocInitial[TAILLE_MAX], int tailleBloc)
+int Filtrage(int exclusion[TAILLE_MAX][2], int nbContraintes, int blocInitial[TAILLE_MAX], int tailleBloc)
 {
 
     // https://c.developpez.com/cours/20-heures/?page=page_16
@@ -154,9 +154,17 @@ void Filtrage(int exclusion[TAILLE_MAX][2], int nbContraintes, int blocInitial[T
         printf("%d ", station[2][i]);
     }
 
+
     // Libération de la mémoire
     free(station[0]);
     free(station[1]);
     free(station[2]);
     free(station);
+    /*printf("Inside Filtrage Function:\n");
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < tailleBloc; j++) {
+            printf("%d ", (station)[i][j]);
+        }
+        printf("\n");
+    }*/
 }
