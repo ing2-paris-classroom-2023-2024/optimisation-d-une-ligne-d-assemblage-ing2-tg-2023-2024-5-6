@@ -81,9 +81,9 @@ void affichage_attributs_operations(Operation op[], int numOperation) {
         printf("Operation %d:\n", op[i].id);
         printf("  duree: %f\n", op[i].duree);
         //printf("  statut_complete: %d\n", op[i].statut_complete);
-        affichage_successeur(op, i);
+        //affichage_successeur(op, i);
         printf("\n");
-        affichage_precedent(op, i);
+        //affichage_precedent(op, i);
         printf("\n");
     }
 }
@@ -161,4 +161,12 @@ void affichage_multi_contraintes() {
     printf("|             MULTI-CONTRAINTES             |\n");
     printf("---------------------------------------------\n");
     reset();
+}
+
+void attente_entre_fonctions(int sec) {
+    printf("Attente entre contrainte");
+    for (int i = 0; i < sec; i++) {
+        printf(".");
+        sleep(1);
+    }
 }

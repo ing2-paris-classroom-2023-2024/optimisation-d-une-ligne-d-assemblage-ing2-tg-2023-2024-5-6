@@ -10,10 +10,11 @@
 #include <stdlib.h>
 
 #include <Fonctions_tests_affichage.h>
+#include <color.h>
+
 
 int precedence( Operation operations[], int numOperations) {
     affichage_precedence();
-
     // Appel de la fonction qui va parcourir les operations
     traverse_operations(operations, 0, numOperations);
 
@@ -21,8 +22,8 @@ int precedence( Operation operations[], int numOperations) {
     return 0;
 }
 
-void initialisation_graphe_p() {
-    Operation operations[NB_OPERATIONS];
+Operation * initialisation_graphe_p() {
+    Operation *operations = malloc(2*NB_OPERATIONS * sizeof(Operation));
     int numOperations = 0;
 
     affichage_init_graphe();
@@ -35,4 +36,6 @@ void initialisation_graphe_p() {
     initialisation_successeurs(operations);
 
     precedence(operations, numOperations);
+
+    return operations;
 }

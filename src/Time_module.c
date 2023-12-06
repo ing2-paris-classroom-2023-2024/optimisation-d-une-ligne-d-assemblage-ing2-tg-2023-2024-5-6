@@ -10,6 +10,7 @@
 #include <initialisation_operations.h>
 #include <color.h>
 #include <Traverser_les_operations.h>
+#include <Fonctions_tests_affichage.h>
 
 
 //Initisalisation de la duree pour chaque operations en utilisant le .txt "operations.txt"
@@ -22,12 +23,14 @@ void initialisation_duree(Operation operations[]) {
     }
 
     int id;
+    int indice;
     float duration;
 
 
 
     while (fscanf(file, "%d %f", &id, &duration) == 2) {
-        operations[id - 1].duree = duration; // Assuming IDs start from 1
+        indice = recherche_indice_id(id, operations, NB_OPERATIONS);
+        operations[indice].duree = duration; // Assuming IDs start from 1
         //printf("Operation %d: %f\n", id, duration);
     }
 
@@ -37,7 +40,7 @@ void initialisation_duree(Operation operations[]) {
     for (int i = 0; i < NB_OPERATIONS; i++) {
         if (operations[i].duree < 0 || operations[i].duree > TEMPS_DE_CYCLE) {
             // Init a 0 si invalide
-            printf("Operation %d has an invalid duration. Setting duration to 0.\n", operations[i].id);
+            //printf("Operation %d has an invalid duration. Setting duration to 0.\n", operations[i].id);
             operations[i].duree = 0;
         }
     }
@@ -45,7 +48,8 @@ void initialisation_duree(Operation operations[]) {
     printf("Initialisation des durees terminee.\n");
 }
 
-float calcul_duree_total(int stations[NB_OPERATIONS], int i, int version, Operation operations[]) {
+float calcul_duree_total(int **stations, int i, int version, Operation operations[]) {
+    //affichage_attributs_operations(operations, NB_OPERATIONS);
     float duree_total = 0;
 
     //En fonction de la version, on utilisera soit la station, soit l'operation
@@ -53,16 +57,17 @@ float calcul_duree_total(int stations[NB_OPERATIONS], int i, int version, Operat
         case 1:
             //On parcourt les operations de la station
             for (int j = 0; j < NB_OPERATIONS; j++) {
-                if (stations[j] != 0) {
+                if (stations[i][j] != 0) {
                     //On recherche dans l'operation correspndante a la valeur stations[i][j]en utilisant recherche_indice_id
-                    duree_total += operations[recherche_indice_id(stations[j], operations, NB_OPERATIONS)].duree;
+                    //printf("Operation %d: %f\n", stations[i][j], operations[recherche_indice_id(stations[i][j], operations, NB_OPERATIONS)].duree);
+                    duree_total += operations[recherche_indice_id(stations[i][j], operations, NB_OPERATIONS)].duree;
                 }
             }
             //On regarde si duree total est superieur a la duree de cycle
             if (duree_total > TEMPS_DE_CYCLE) {
                 printf("Duree totale: %f ms\n", duree_total);
                 printf("La duree totale depasse le temps de cycle.\n");
-                return 0;
+                return duree_total;
             }
             break;
         case 2:

@@ -1,12 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "Bloc.h"
+#include <color.h>
 
 
 
 #define TAILLE_MAX 100 // Remplacez la valeur par celle appropriée
 
-int Filtrage(int exclusion[TAILLE_MAX][2], int nbContraintes, int blocInitial[TAILLE_MAX], int tailleBloc)
+int ** Filtrage(int exclusion[TAILLE_MAX][2], int nbContraintes, int blocInitial[TAILLE_MAX], int tailleBloc, int **station)
 {
 
     // https://c.developpez.com/cours/20-heures/?page=page_16
@@ -19,7 +20,7 @@ int Filtrage(int exclusion[TAILLE_MAX][2], int nbContraintes, int blocInitial[TA
     int resteoperationnonfiltrees = 0;
 
     // Utilisation d'un tableau 2D pour représenter les stations
-    int **station;
+    //int **station;
     station = malloc(3 * sizeof(int *)); // Trois stations : 0 pour les filtrées, 1 pour les non-filtrées, 2 pour le reste
     if (station == NULL)
     {
@@ -34,6 +35,11 @@ int Filtrage(int exclusion[TAILLE_MAX][2], int nbContraintes, int blocInitial[TA
         {
             fprintf(stderr, "Erreur d'allocation");
             exit(EXIT_FAILURE);
+        }
+        //Initialisation des stations à 0
+        for (int j = 0; j < tailleBloc; j++)
+        {
+            station[i][j] = 0;
         }
     }
 
@@ -156,15 +162,10 @@ int Filtrage(int exclusion[TAILLE_MAX][2], int nbContraintes, int blocInitial[TA
 
 
     // Libération de la mémoire
-    free(station[0]);
-    free(station[1]);
-    free(station[2]);
-    free(station);
-    /*printf("Inside Filtrage Function:\n");
-    for (int i = 0; i < 3; i++) {
-        for (int j = 0; j < tailleBloc; j++) {
-            printf("%d ", (station)[i][j]);
-        }
-        printf("\n");
-    }*/
+    //free(station[0]);
+    //free(station[1]);
+    //free(station[2]);
+    //free(station);
+
+    return station;
 }

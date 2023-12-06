@@ -20,6 +20,8 @@ void Affichage_Operations(const Operation operations[], int numOperations);
 void affichage_successeur(Operation op[], int i);
 void affichage_precedent(Operation op[], int i);
 
+void attente_entre_fonctions(int sec);
+
 void affichage_debut();
 void affichage_init_graphe();
 void affichage_precedence();

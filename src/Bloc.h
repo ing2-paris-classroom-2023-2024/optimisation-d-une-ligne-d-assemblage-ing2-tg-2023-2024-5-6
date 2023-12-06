@@ -6,7 +6,7 @@
 //
 // Définition du type Booléen
 
-int Filtrage(int exclusion[TAILLE_MAX][2], int nbContraintes, int blocInitial[TAILLE_MAX], int tailleBloc);
+int ** Filtrage(int exclusion[TAILLE_MAX][2], int nbContraintes, int blocInitial[TAILLE_MAX], int tailleBloc, int **station);
 
 #endif
 

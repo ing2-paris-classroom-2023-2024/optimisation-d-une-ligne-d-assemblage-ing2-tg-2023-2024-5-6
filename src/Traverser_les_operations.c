@@ -17,7 +17,7 @@
 
 int recherche_indice_id(int id, Operation op[], int numOperation) {
     //Fonction qui recherche l'indice d'une operation dans le tableau d'operations
-    int targetIndex = -1;
+    int targetIndex = 0;
     for (int i = 0; i < numOperation; i++) {
         if (op[i].id == id) {
             targetIndex = i;
@@ -130,7 +130,7 @@ void traverse_operations(Operation op[], int startOperation, int numOperation) {
     //  En commençant par une opération spécifiée et en visitant ses successeurs.
 
     // Definition d'une File de NB_OPERATIONS lignes
-    int File[NB_OPERATIONS];
+    int *File = malloc(NB_OPERATIONS * sizeof(int));
     int indice = 0;
     //Ajout dans la File toute les operations avec 0 comme precedent
     for (int i = 0; i < NB_OPERATIONS; i++) {
@@ -149,17 +149,18 @@ void traverse_operations(Operation op[], int startOperation, int numOperation) {
 
     //affichage_attributs_operations(op, numOperation);
 
-    while (i < NB_OPERATIONS) {
+    while (i <= NB_OPERATIONS) {
         // Affichage de la File
         affichage_File(File);
         //affichage_successeur(op, i);
 
-        int lst_successeurs[NB_OPERATIONS];
+        int *lst_successeurs = malloc(NB_OPERATIONS * sizeof(int));
         lst_successeurs[0] = 0; // Initialisation de la liste des successeurs
 
         // si id possede un successeur
         int indice = recherche_indice_id(File[i], op, numOperation);
         recherche_sucesseurs(op, File[i], lst_successeurs, numOperation);
+
 
         //printf("Operation %d\n", op[indice].id);
         //printf("Duree: %f\n", op[indice].duree);
@@ -167,21 +168,25 @@ void traverse_operations(Operation op[], int startOperation, int numOperation) {
         op[indice].statut_complete = 1;
         int num_successors = 1;
         //Si duree depasse le temps de cycle
-        if (duree_totale > TEMPS_DE_CYCLE) {
+        /*if (duree_totale > TEMPS_DE_CYCLE) {
             printf("Duree totale: %f ms\n", duree_totale);
             printf("La duree totale depasse le temps de cycle.\n");
             return;
-        }
+        }*/
+
+
 
         if (op[indice].lst_successeurs[0] != 0) {
 
             while (lst_successeurs[0] > 0 && lst_successeurs[0] <= NB_OPERATIONS) {
                 int id = lst_successeurs[0];
+
                 int j = 0;
                 if (id_in_File(id, File)) {
                     // Si l'id est dans la File, on ne fait rien
                     break;
                 }
+
                 while (lst_successeurs[j] != 0) {
                     lst_successeurs[j] = lst_successeurs[j + 1];
                     j++;
@@ -194,6 +199,7 @@ void traverse_operations(Operation op[], int startOperation, int numOperation) {
                         while (File[k] != 0) {
                             k++;
                         }
+
                         File[k] = id;
                         // Set statut_complete to 1 for the added operation
                         int addedOperationIndex = recherche_indice_id(id, op, NB_OPERATIONS);
@@ -202,12 +208,16 @@ void traverse_operations(Operation op[], int startOperation, int numOperation) {
                         //printf("microseconds: %d\n", microseconds);
                         usleep(microseconds);
                         //printf("Operation %d complete\n", op[indice].id);
+
                         duree_totale += calcul_duree_total(File,indice, 2, op);
                     }
                 }
             }
+
         }
+
         i++;
+
     }
     printf("\nFile finale: \n");
     rouge();

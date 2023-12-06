@@ -63,6 +63,14 @@ void matrice_to_lst(int matrice[][NB_OPERATIONS], Operation op[]) {
         }
         op[i].lst_successeurs[indice] = 0;
     }
+    //Tout point inferieur a 0 ou sueprieur a NB_OPERATIONS est egale a 0
+    for (int i = 0; i < NB_OPERATIONS; i++) {
+        for (int j = 0; op[i].lst_successeurs[j] != 0; j++) {
+            if (op[i].lst_successeurs[j] < 0 || op[i].lst_successeurs[j] > NB_OPERATIONS) {
+                op[i].lst_successeurs[j] = 0;
+            }
+        }
+    }
     //Affichage des successeurs - FONCTION TEST
     /*for (int i = 0; i < NB_OPERATIONS; i++) {
         printf("Operation %d: ", op[i].id);

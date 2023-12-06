@@ -8,7 +8,7 @@
 #include <exclusion.h>
 #include <multi_contraintes.h>
 #include <Fonctions_tests_affichage.h>
-
+#include <color.h>
 
 int main() {
     affichage_debut();
@@ -18,23 +18,27 @@ int main() {
      * 2. Précédence
      */
 
-    initialisation_graphe_p();
+    Operation *operations = initialisation_graphe_p();
 
     /*
      * 3. Exclusion
      */
 
     printf("\n");
+    attente_entre_fonctions(5);
+
     int **station;
-    station = malloc(3 * sizeof(int *));
-    exclusion(station);
+    station = exclusion();
 
     /*
      * 4. Multi-contraintes
      */
 
     printf("\n");
-    multi_contraintes();
+    attente_entre_fonctions(5);
+    printf("\n");
+
+    multi_contraintes(station, operations);
     return 0;
 }
 

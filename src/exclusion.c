@@ -9,6 +9,7 @@ https://www.youtube.com/watch?v=FmaNOdbngLc&t=1843s&ab_channel=FormationVid%C3%A
 #include "Bloc.h"
 #include <Fonctions_tests_affichage.h>
 #include <exclusion.h>
+#include <color.h>
 
 
 #define TAILLE_MAX 1000
@@ -122,7 +123,7 @@ void Bloc_Initial(int minV1, int maxV1, int blocInitial[TAILLE_MAX], int* taille
 
 
 
-int exclusion() {
+int **exclusion() {
     char nom_fichier[TAILLE_MAX] = "exclusions.txt";
     int tableau[TAILLE_MAX];
     int exclusion[TAILLE_MAX][2];
@@ -136,10 +137,12 @@ int exclusion() {
     int tailleBloc;
     int iteration = 0;
 
-    /**station = malloc(TAILLE_MAX * sizeof(int *));
-    for (int i = 0; i < TAILLE_MAX; i++) {
-        (*station)[i] = malloc(2 * sizeof(int));
-    }*/
+    int **station = malloc(3 * sizeof(int*));
+    if (station == NULL) {
+        fprintf(stderr, "Erreur d'allocation");
+        exit(EXIT_FAILURE);
+    }
+
 
     affichage_exclusion();
 
@@ -152,15 +155,11 @@ int exclusion() {
     Bloc_Initial(minV1, maxV1, blocInitial, &tailleBloc);
 
     // Appel de la fonction RenouvelerContraintes avec les paramètres appropriés
-    Filtrage(exclusion, nbContraintes, blocInitial, tailleBloc);
+    station = Filtrage(exclusion, nbContraintes, blocInitial, tailleBloc, station);
 
-    /*printf("Inside exclusion Function:\n");
-    for (int i = 0; i < 3; i++) {
-        for (int j = 0; j < tailleBloc; j++) {
-            printf("%d ", station[i][j]);
-        }
-        printf("\n");
-    }*/
 
-    return 0;
+    printf("---------------------------------\n");
+    printf("Exclusion fini\n");
+
+    return station;
 }
