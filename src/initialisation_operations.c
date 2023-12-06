@@ -131,6 +131,7 @@ int initialisation_successeurs(Operation lst_operations[]) {
 }
 
 int cmpfunc(const void *a, const void *b) {
+    //Fonction utilisee pour qsort
     Operation *operationA = (Operation *)a;
     Operation *operationB = (Operation *)b;
     return operationA->id - operationB->id;
